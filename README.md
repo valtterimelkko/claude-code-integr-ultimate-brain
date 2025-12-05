@@ -2,8 +2,40 @@
 
 A collection of Claude Code skills that enable efficient interaction with your **Thomas Frank's Ultimate Brain** Notion workspace. These skills provide structured, reliable access to your Notion Notes and Projects databases through simple, context-efficient operations.
 
+## 💡 Why This Matters: The Value Proposition
+
+If you're already using [Ultimate Brain](https://thomasjfrank.com/brain/) to organize your projects, notes, and knowledge, these skills unlock powerful AI-first workflows:
+
+### 🔍 **AI-First Information Access**
+- **Find and retrieve** your information at speed using natural language instead of manual Notion navigation
+- **Quick edits** to your knowledge base without context-switching away from your AI workflow
+- Search and access your notes and projects as part of agentic conversations, making your data immediately actionable
+
+### 🎯 **Ultimate Brain as Your Source of Truth**
+- Use your **Projects database as the authoritative context** for AI-powered work
+- Feed project details, goals, and requirements directly to Claude for:
+  - Content creation informed by your actual projects
+  - Code generation grounded in your technical specifications
+  - Strategic planning based on your documented context
+  - Task decomposition from your project structure
+
+### 🧠 **Context Engineering Without Extra Cost**
+- **Leverage AI as a productivity multiplier** without paying for Notion's AI add-ons
+- Perfect if you already subscribe to Claude, ChatGPT, or other AI services
+- Your Ultimate Brain becomes the "knowledge base" that powers better AI responses
+- **Context is everything in AI workflows** — structured, organized context (like Ultimate Brain provides) means higher quality, more relevant AI outputs
+
+### 🚀 **Seamless AI Integration**
+- **No data duplication**: Access your single source of truth directly
+- **Stay in control**: All your data remains in Notion under your management
+- **Rate-limit friendly**: Built-in delays ensure sustainable, respectful API usage
+- **Privacy focused**: Your integration token stays secure on your machine, not shared with external services
+
+This approach transforms Ultimate Brain from a passive information store into an **active intelligence layer** for your AI-powered work.
+
 ## 📋 Table of Contents
 
+- [Why This Matters: The Value Proposition](#why-this-matters-the-value-proposition)
 - [Overview](#overview)
 - [Available Skills](#available-skills)
 - [Prerequisites](#prerequisites)

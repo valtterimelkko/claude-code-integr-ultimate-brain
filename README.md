@@ -24,7 +24,7 @@ A collection of Claude Code skills that enable efficient interaction with your *
 
 ## 🎯 Overview
 
-This skills system is **optimized for Thomas Frank's Ultimate Brain system on Notion**. It currently supports working with **Notes** in your Ultimate Brain workspace, with a focus on reliability, context efficiency, and respecting Notion API rate limits.
+This skills system is **optimized for [Thomas Frank's Ultimate Brain](https://thomasjfrank.com/brain/) system on Notion**. It currently supports working with **Notes** in your Ultimate Brain workspace, with a focus on reliability, context efficiency, and respecting Notion API rate limits.
 
 ### Key Features
 
@@ -51,7 +51,7 @@ Each skill has comprehensive documentation in the [`skill-definitions/`](skill-d
 
 Before you begin, ensure you have:
 
-- **Thomas Frank's Ultimate Brain** Notion workspace set up
+- **[Thomas Frank's Ultimate Brain](https://thomasjfrank.com/brain/)** Notion workspace set up
 - **Notion account** (free tier is sufficient - the Notion API is generous for personal use)
 - **Python 3.7+** installed on your system
 - **`requests`** library for Python (`pip install requests`)
@@ -449,7 +449,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Thomas Frank** for creating the Ultimate Brain Notion template
+- **Thomas Frank** for creating [Ultimate Brain](https://thomasjfrank.com/brain/) - an excellent Notion template for productivity and knowledge management
 - **Anthropic** for Claude and Claude Code
 - **Notion** for their excellent API
 

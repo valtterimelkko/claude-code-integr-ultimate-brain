@@ -43,8 +43,11 @@ Thumbs.db
 .env
 env.conf
 
-# Claude Code temporary files
-.claude/temp/
+# Claude Code files (user-specific)
+.claude/
+
+# Archive folder (development history, not for distribution)
+Archive/
 
 # Test files
 test_*.py

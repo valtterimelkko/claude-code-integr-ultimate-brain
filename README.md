@@ -8,12 +8,14 @@ A collection of Claude Code skills that enable efficient interaction with your *
 - [Available Skills](#available-skills)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-  - [Step 1: Set Up Notion Integration](#step-1-set-up-notion-integration)
-  - [Step 2: Find Your Database IDs](#step-2-find-your-database-ids)
-  - [Step 3: Configure the Scripts](#step-3-configure-the-scripts)
-  - [Step 4: Set Up Environment File](#step-4-set-up-environment-file)
-  - [Step 5: Install the Skills](#step-5-install-the-skills)
-  - [Step 6: Test the Installation](#step-6-test-the-installation)
+  - [Step 1: Clone This Repository](#step-1-clone-this-repository)
+  - [Step 2: Set Up Notion Integration](#step-2-set-up-notion-integration)
+  - [Step 3: Find Your Database IDs](#step-3-find-your-database-ids)
+  - [Step 4: Configure the Scripts](#step-4-configure-the-scripts)
+  - [Step 5: Set Up Environment File](#step-5-set-up-environment-file)
+  - [Step 6: Install Scripts and Skills Globally](#step-6-install-scripts-and-skills-globally)
+  - [Step 7: Set Up CLAUDE.md (Optional but Recommended)](#step-7-set-up-claudemd-optional-but-recommended)
+  - [Step 8: Test the Installation](#step-8-test-the-installation)
 - [Usage](#usage)
 - [Architecture](#architecture)
 - [Troubleshooting](#troubleshooting)
@@ -58,7 +60,27 @@ Before you begin, ensure you have:
 
 ## 📦 Installation
 
-### Step 1: Set Up Notion Integration
+> **📚 Additional Resources**: For more information about Claude Code skills, see the [official Anthropic documentation](https://code.claude.com/docs/en/skills).
+
+### Installation Overview
+
+You have two options for installing these skills:
+
+1. **Global Installation** (recommended): Skills available in all Claude Code sessions
+2. **Project-Specific Installation**: Skills only available in a specific project directory
+
+We'll cover **global installation** in this guide, which is what most users want.
+
+### Step 1: Clone This Repository
+
+First, clone this repository to your local machine:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/notion-claude-code-skills.git
+cd notion-claude-code-skills
+```
+
+### Step 2: Set Up Notion Integration
 
 1. **Go to Notion Integrations page**: Visit [https://www.notion.so/my-integrations](https://www.notion.so/my-integrations)
 
@@ -83,7 +105,7 @@ Before you begin, ensure you have:
    - Search for and select your integration (e.g., "Claude Code Skills")
    - Repeat for the **Projects** database
 
-### Step 2: Find Your Database IDs
+### Step 3: Find Your Database IDs
 
 You'll need the IDs for two databases: **Notes** and **Projects**.
 
@@ -113,21 +135,15 @@ You'll need the IDs for two databases: **Notes** and **Projects**.
 - Don't include the `?v=` part or anything after it
 - Don't worry about dashes - the script will format them correctly
 
-### Step 3: Configure the Scripts
+### Step 4: Configure the Scripts
 
-1. **Clone or download this repository** to your local machine:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/notion-claude-code-skills.git
-   cd notion-claude-code-skills
-   ```
-
-2. **Edit the `scripts/common.py` file**:
+1. **Edit the `scripts/common.py` file**:
    ```bash
    nano scripts/common.py
    # or use your preferred text editor
    ```
 
-3. **Replace the placeholder database IDs** on lines 22-23:
+2. **Replace the placeholder database IDs** on lines 22-23:
 
    **BEFORE** (what you'll see):
    ```python
@@ -148,9 +164,9 @@ You'll need the IDs for two databases: **Notes** and **Projects**.
    - Example: If your ID from the URL is `a1b2c3d4e5f67890a1b2c3d4e5f67890`
    - Format it as: `a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890`
 
-4. **Save the file** and exit the editor
+3. **Save the file** and exit the editor
 
-### Step 4: Set Up Environment File
+### Step 5: Set Up Environment File
 
 The scripts need to access your Notion Integration Token. We'll store it securely in a configuration file.
 
@@ -178,7 +194,7 @@ The scripts need to access your Notion Integration Token. We'll store it securel
 
    This ensures only root can read the file containing your token.
 
-### Step 5: Install the Skills
+### Step 6: Install Scripts and Skills Globally
 
 1. **Copy the scripts to Claude's scripts directory**:
    ```bash
@@ -187,32 +203,27 @@ The scripts need to access your Notion Integration Token. We'll store it securel
    chmod +x ~/.claude/scripts/notion/*.py
    ```
 
-2. **Copy the skill definitions to Claude's skills directory**:
-   ```bash
-   mkdir -p ~/.claude/skills
+2. **Copy the skill definitions to Claude's global skills directory**:
 
-   # Copy each skill
-   cp -r skill-definitions/notion-create-note.md ~/.claude/skills/notion-create-note/SKILL.md
-   cp -r skill-definitions/notion-edit-note.md ~/.claude/skills/notion-edit-note/SKILL.md
-   cp -r skill-definitions/notion-list-project-notes.md ~/.claude/skills/notion-list-project-notes/SKILL.md
-   cp -r skill-definitions/notion-read-note.md ~/.claude/skills/notion-read-note/SKILL.md
-   cp -r skill-definitions/notion-search-notes.md ~/.claude/skills/notion-search-notes/SKILL.md
-   ```
-
-   Or create the directory structure first:
+   Create the directory structure for each skill:
    ```bash
    mkdir -p ~/.claude/skills/notion-create-note
    mkdir -p ~/.claude/skills/notion-edit-note
    mkdir -p ~/.claude/skills/notion-list-project-notes
    mkdir -p ~/.claude/skills/notion-read-note
    mkdir -p ~/.claude/skills/notion-search-notes
+   ```
 
+   Copy the skill definition files:
+   ```bash
    cp skill-definitions/notion-create-note.md ~/.claude/skills/notion-create-note/SKILL.md
    cp skill-definitions/notion-edit-note.md ~/.claude/skills/notion-edit-note/SKILL.md
    cp skill-definitions/notion-list-project-notes.md ~/.claude/skills/notion-list-project-notes/SKILL.md
    cp skill-definitions/notion-read-note.md ~/.claude/skills/notion-read-note/SKILL.md
    cp skill-definitions/notion-search-notes.md ~/.claude/skills/notion-search-notes/SKILL.md
    ```
+
+   > **ℹ️ Note**: Installing to `~/.claude/skills/` makes these skills available **globally** in all Claude Code sessions. For project-specific installation, you would copy to `.claude/skills/` in your project directory instead.
 
 3. **Verify the installation**:
    ```bash
@@ -224,7 +235,38 @@ The scripts need to access your Notion Integration Token. We'll store it securel
    - 5 skill directories in `~/.claude/skills/`
    - 7 Python scripts in `~/.claude/scripts/notion/`
 
-### Step 6: Test the Installation
+### Step 7: Set Up CLAUDE.md (Optional but Recommended)
+
+This repository includes a `CLAUDE.md` file that provides additional context and instructions to Claude Code about these skills when working in a project directory.
+
+**What is CLAUDE.md?**
+- It's a project-specific instruction file that Claude Code automatically reads
+- It helps Claude understand your project structure and available tools
+- It's completely optional but highly recommended for better Claude Code integration
+
+**To use CLAUDE.md:**
+
+1. **Copy it to your working project directory** (where you use Claude Code for Notion-related work):
+   ```bash
+   # Example: If you work on Notion notes in ~/my-notes-project/
+   cp CLAUDE.md ~/my-notes-project/
+   ```
+
+2. **Or keep it in any project where you want Claude to use these Notion skills**:
+   ```bash
+   # It can be in any directory where you invoke Claude Code
+   cp CLAUDE.md /path/to/your/project/
+   ```
+
+**What does CLAUDE.md do?**
+- Tells Claude about the 5 available Notion skills
+- Explains the architecture and how skills work
+- Provides context about your Ultimate Brain setup
+- Helps Claude make better decisions about when to use which skill
+
+> **💡 Tip**: You can have CLAUDE.md in multiple project directories. Each time you work in that directory, Claude will read it and understand the Notion skills are available.
+
+### Step 8: Test the Installation
 
 1. **Test the search functionality**:
    ```bash
@@ -277,9 +319,12 @@ Claude: [Uses notion-create-note skill]
 
 ## 🏗️ Architecture
 
+### File Structure After Installation
+
+**Global Claude Code directories** (skills available in all sessions):
 ```
 ~/.claude/
-├── skills/
+├── skills/                            # Global skills directory
 │   ├── notion-create-note/
 │   │   └── SKILL.md
 │   ├── notion-edit-note/
@@ -292,16 +337,25 @@ Claude: [Uses notion-create-note skill]
 │       └── SKILL.md
 └── scripts/
     └── notion/
-        ├── common.py                  # Shared utilities & config
+        ├── common.py                  # Shared utilities & config (YOUR DB IDs HERE)
         ├── create_note.py            # Create new note
         ├── edit_note.py              # Edit note content
         ├── list_project_notes.py     # List project notes
         ├── read_note.py              # Read note content
         ├── search_notes.py           # Search notes
         └── search_projects.py        # Find projects by name
+```
 
+**Secure credentials location**:
+```
 /etc/keep-to-notion/
-└── env.conf                          # Notion API token (secure)
+└── env.conf                          # Notion API token (YOUR TOKEN HERE)
+```
+
+**Project directory** (optional, for better Claude context):
+```
+/path/to/your/project/
+└── CLAUDE.md                         # Project instructions for Claude Code
 ```
 
 ### How It Works

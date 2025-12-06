@@ -1,0 +1,71 @@
+{
+  "name": "Claude MCP - Read Note",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "c4a8b3f2-0d5e-4g9b-c7f3-2b6d4e8f0a1c",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-read-note",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "c4a8b3f2-0d5e-4g9b-c7f3-2b6d4e8f0a1c"
+    },
+    {
+      "parameters": {
+        "command": "=python3 /home/node/.claude/scripts/notion/read_note.py{{ $json.body.id ? ' --id \"' + $json.body.id + '\"' : ' --name \"' + $json.body.name + '\"' }}{{ $json.body.project_name ? ' --project-name \"' + $json.body.project_name + '\"' : '' }} --format {{ $json.body.format || 'full' }}"
+      },
+      "id": "exec-read-note",
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const pythonOutput = items[0].json.stdout;\ntry {\n  return [{ json: JSON.parse(pythonOutput) }];\n} catch (e) {\n  return [{ json: { error: \"Failed to parse Python output\", raw: pythonOutput } }];\n}"
+      },
+      "id": "code-read-note",
+      "name": "Parse JSON Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "versionId": ""
+}

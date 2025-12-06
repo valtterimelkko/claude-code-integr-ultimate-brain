@@ -11,6 +11,14 @@ Choose your integration approach:
 
 All integrations access the same Notion source of truth with structured, efficient API queries.
 
+## 🚀 Quick Start: Choose Your Path
+
+| I want to... | Choose This | Time | Setup |
+|--------------|-------------|------|-------|
+| Use Claude in VS Code or native app | [Claude Code/Desktop](claude-code-desktop/README.md) | ~10 min | Local installation |
+| Automate workflows with web Claude | [Claude.ai + n8n](claude-ai/README.md) | ~30 min | Web-based setup |
+| Learn more before deciding | Read [below](#why-this-matters) | 5 min | Just reading |
+
 ## 💡 Why This Matters: The Value Proposition
 
 If you're already using [Ultimate Brain](https://thomasjfrank.com/brain/) to organize your projects, notes, and knowledge, these skills unlock powerful AI-first workflows:
@@ -38,503 +46,249 @@ If you're already using [Ultimate Brain](https://thomasjfrank.com/brain/) to org
 - **No data duplication**: Access your single source of truth directly
 - **Stay in control**: All your data remains in Notion under your management
 - **Rate-limit friendly**: Built-in delays ensure sustainable, respectful API usage
-- **Privacy focused**: Your integration token stays secure on your machine, not shared with external services
+- **Privacy focused**: Your integration token stays secure on your machine or in n8n
 
 This approach transforms Ultimate Brain from a passive information store into an **active intelligence layer** for your AI-powered work.
 
-## 🛠️ Integration Options
+---
 
-### Option 1: Claude Code & Claude Desktop
+## 📚 Platform-Specific Guides
 
-**Best for:** Direct AI conversations with your knowledge base
+### For Claude Code/Desktop Users
 
-- 💻 Works with Claude Code (VS Code extension) or Claude Desktop (native app)
-- ⚡ Real-time access to your notes and projects
-- 🔧 No extra services needed (runs locally)
-- 📚 Perfect for content creation, coding, and planning with context
+**What you get:**
+- Works with Claude Code (VS Code extension) or Claude Desktop
+- Local Python scripts that query your Notion directly
+- Real-time access to your notes and projects
+- No extra services needed
 
-**Get Started:** See [claude-code-desktop/README.md](claude-code-desktop/README.md)
+**Setup time:** ~10 minutes (automated) or ~20 minutes (manual)
 
-### Option 2: Claude.ai + n8n Workflows
+→ **[Go to Claude Code/Desktop Setup Guide](claude-code-desktop/README.md)**
 
-**Best for:** Automated workflows and scheduled tasks
+Quick preview:
+```bash
+cd claude-code-desktop
+chmod +x install.sh
+./install.sh
+# Answer a few questions about your database IDs
+# Done! Restart Claude Code and start using the 5 skills
+```
 
-- 🌐 Web-based Claude with workflow automation
-- 🔄 Schedule tasks and build complex automations
-- 👥 Easily share workflows with team members
-- 📊 Visual workflow builder (no coding required)
-- 💰 Free tier available
+### For Claude.ai + n8n Users
 
-**Get Started:** See [claude-ai/README.md](claude-ai/README.md)
+**What you get:**
+- Web-based automation with Claude.ai
+- Visual workflow builder
+- Scheduled task execution
+- Easy team collaboration
+- Free tier available
 
-**Note:** This integration leverages Claude.ai's built-in n8n integration for seamless workflow orchestration.
+**Setup time:** ~30 minutes
 
-## 📋 Table of Contents
+→ **[Go to Claude.ai + n8n Setup Guide](claude-ai/SETUP_GUIDE.md)**
 
-- [Multiple Platforms, One Source of Truth](#-multiple-platforms-one-source-of-truth)
-- [Why This Matters: The Value Proposition](#why-this-matters-the-value-proposition)
-- [Integration Options](#integration-options)
-- [Available Skills](#available-skills)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-  - [Step 1: Clone This Repository](#step-1-clone-this-repository)
-  - [Step 2: Set Up Notion Integration](#step-2-set-up-notion-integration)
-  - [Step 3: Find Your Database IDs](#step-3-find-your-database-ids)
-  - [Step 4: Configure the Scripts](#step-4-configure-the-scripts)
-  - [Step 5: Set Up Environment File](#step-5-set-up-environment-file)
-  - [Step 6: Install Scripts and Skills Globally](#step-6-install-scripts-and-skills-globally)
-  - [Step 7: Set Up CLAUDE.md (Optional but Recommended)](#step-7-set-up-claudemd-optional-but-recommended)
-  - [Step 8: Test the Installation](#step-8-test-the-installation)
-- [Usage](#usage)
-- [Architecture](#architecture)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+Quick preview:
+1. Set up n8n (cloud or self-hosted)
+2. Configure your Notion databases
+3. Import the 5 pre-built workflows
+4. Connect to Claude.ai via MCP
+5. Start automating!
 
-## 🎯 Overview
+---
 
-This skills system is **optimized for [Thomas Frank's Ultimate Brain](https://thomasjfrank.com/brain/) system on Notion**. It currently supports working with **Notes** in your Ultimate Brain workspace, with a focus on reliability, context efficiency, and respecting Notion API rate limits.
+## ⚡ Available Capabilities
 
-### Key Features
+Both platforms provide access to these 5 core operations:
 
-- **Structured Output**: All operations return JSON with guaranteed format
-- **Archived Filtering**: Automatically excludes archived notes unless explicitly requested
-- **Name Resolution**: Search for projects and notes by partial name match
-- **Error Handling**: Clear, actionable error messages
-- **Context Efficient**: Returns only needed data, doesn't overload your context window
-- **Rate Limit Compliant**: Built-in delays (0.3s between API calls) to respect Notion's limits
+1. **Search Notes** - Find notes by keyword or project
+2. **Read Notes** - Get full content of any note
+3. **List Project Notes** - See all notes in a specific project
+4. **Create Notes** - Add new notes to your brain
+5. **Edit Notes** - Append or modify existing content
 
-## 🛠️ Available Skills
-
-Five skills are available for use in Claude Code:
-
-1. **`notion-create-note`** - Create a new note in the Note inbox
-2. **`notion-list-project-notes`** - List all notes in a specific project
-3. **`notion-search-notes`** - Search for notes by keyword
-4. **`notion-read-note`** - Read the full content of a note
-5. **`notion-edit-note`** - Edit note content (append, replace, or clear)
-
-Each skill has comprehensive documentation in the [`claude-code-desktop/skill-definitions/`](claude-code-desktop/skill-definitions/) folder.
+---
 
 ## ✅ Prerequisites
 
-Before you begin, ensure you have:
+### Common (Both Platforms)
+- **Ultimate Brain Notion workspace** set up and working
+- **Notion integration token** from your workspace
+- **Database IDs** for your Notes and Projects databases
+- Basic command-line familiarity
 
-- **[Thomas Frank's Ultimate Brain](https://thomasjfrank.com/brain/)** Notion workspace set up
-- **Notion account** (free tier is sufficient - the Notion API is generous for personal use)
-- **Python 3.7+** installed on your system
-- **`requests`** library for Python (`pip install requests`)
-- **Claude Code** installed and configured
-- Basic familiarity with command line operations
+### Platform-Specific
+- **Claude Code:** Python 3.7+, VS Code or Claude Desktop installed
+- **Claude.ai:** n8n instance (cloud free tier or self-hosted), basic Docker knowledge
 
-## 📦 Installation
+→ **See your chosen platform's guide for detailed setup**
 
-> **📚 Additional Resources**: For more information about Claude Code skills, see the [official Anthropic documentation](https://code.claude.com/docs/en/skills).
+---
 
-### Installation Overview
-
-You have two options for installing these skills:
-
-1. **Global Installation** (recommended): Skills available in all Claude Code sessions
-2. **Project-Specific Installation**: Skills only available in a specific project directory
-
-We'll cover **global installation** in this guide, which is what most users want.
-
-### Step 1: Clone This Repository
-
-First, clone this repository to your local machine:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/notion-claude-code-skills.git
-cd notion-claude-code-skills
-```
-
-### Step 2: Set Up Notion Integration
-
-1. **Go to Notion Integrations page**: Visit [https://www.notion.so/my-integrations](https://www.notion.so/my-integrations)
-
-2. **Create a new integration**:
-   - Click **"+ New integration"**
-   - Give it a name (e.g., "Claude Code Skills")
-   - Select the workspace where your Ultimate Brain is located
-   - Click **"Submit"**
-
-3. **Copy the Integration Token**:
-   - After creating, you'll see an **"Internal Integration Token"**
-   - Click **"Show"** then **"Copy"** to copy the token
-   - **IMPORTANT**: Keep this token secure! It provides access to your Notion workspace
-   - The token will look like: `secret_ABC123xyz...`
-
-4. **Share your databases with the integration**:
-   - Open your **Ultimate Brain** workspace in Notion
-   - Navigate to the **"Databases & Components"** page
-   - Open your **Notes** database (full page view)
-   - Click the **"..."** menu in the top right
-   - Scroll down and click **"+ Add connections"**
-   - Search for and select your integration (e.g., "Claude Code Skills")
-   - Repeat for the **Projects** database
-
-### Step 3: Find Your Database IDs
-
-You'll need the IDs for two databases: **Notes** and **Projects**.
-
-#### Finding Database IDs:
-
-1. **Navigate to Databases & Components**:
-   - In your Ultimate Brain workspace, find the link to **"Databases & Components"**
-   - This is typically on your dashboard/home page
-
-2. **Open the Notes database**:
-   - Click on the **Notes** database to open it in full page view
-   - Look at the URL in your browser's address bar
-   - The URL will look like: `https://www.notion.so/a1b2c3d4e5f67890a1b2c3d4e5f67890?v=...`
-   - The database ID is the long string of letters and numbers: `a1b2c3d4e5f67890a1b2c3d4e5f67890`
-   - **Copy this ID** - you'll need it in Step 3
-
-3. **Open the Projects database**:
-   - Go back to "Databases & Components"
-   - Click on the **Projects** database
-   - Look at the URL again
-   - The URL will look like: `https://www.notion.so/1234567890abcdef1234567890abcdef?v=...`
-   - The database ID is: `1234567890abcdef1234567890abcdef`
-   - **Copy this ID** - you'll need it in Step 3
-
-**Important Notes**:
-- Database IDs are **32 characters long** (letters and numbers, no dashes in the URL)
-- Don't include the `?v=` part or anything after it
-- Don't worry about dashes - the script will format them correctly
-
-### Step 4: Configure the Scripts
-
-1. **Edit the `claude-code-desktop/scripts/common.py` file**:
-   ```bash
-   nano claude-code-desktop/scripts/common.py
-   # or use your preferred text editor
-   ```
-
-2. **Replace the placeholder database IDs** on lines 22-23:
-
-   **BEFORE** (what you'll see):
-   ```python
-   # Database IDs (formatted with dashes for API calls)
-   # REPLACE THESE WITH YOUR ACTUAL DATABASE IDs FROM YOUR ULTIMATE BRAIN SETUP
-   NOTES_DB_ID = "YOUR_NOTES_DATABASE_ID_HERE"
-   PROJECTS_DB_ID = "YOUR_PROJECTS_DATABASE_ID_HERE"
-   ```
-
-   **AFTER** (example with your IDs - with dashes added):
-   ```python
-   # Database IDs (formatted with dashes for API calls)
-   NOTES_DB_ID = "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890"
-   PROJECTS_DB_ID = "12345678-90ab-cdef-1234-567890abcdef"
-   ```
-
-   **⚠️ IMPORTANT**: Format your database IDs with dashes in this pattern: `8-4-4-4-12` characters
-   - Example: If your ID from the URL is `a1b2c3d4e5f67890a1b2c3d4e5f67890`
-   - Format it as: `a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890`
-
-3. **Save the file** and exit the editor
-
-### Step 5: Set Up Environment File
-
-The scripts need to access your Notion Integration Token. We'll store it securely in a configuration file.
-
-1. **Create the configuration directory**:
-   ```bash
-   sudo mkdir -p /etc/keep-to-notion
-   ```
-
-2. **Create the configuration file**:
-   ```bash
-   sudo nano /etc/keep-to-notion/env.conf
-   ```
-
-3. **Add your Notion token**:
-   ```
-   NOTION_TOKEN=secret_YOUR_TOKEN_FROM_STEP_1_HERE
-   ```
-
-   Replace `secret_YOUR_TOKEN_FROM_STEP_1_HERE` with the actual integration token you copied in Step 1.
-
-4. **Save and secure the file**:
-   ```bash
-   sudo chmod 600 /etc/keep-to-notion/env.conf
-   ```
-
-   This ensures only root can read the file containing your token.
-
-### Step 6: Install Scripts and Skills Globally
-
-1. **Copy the scripts to Claude's scripts directory**:
-   ```bash
-   mkdir -p ~/.claude/scripts/notion
-   cp claude-code-desktop/scripts/*.py ~/.claude/scripts/notion/
-   chmod +x ~/.claude/scripts/notion/*.py
-   ```
-
-2. **Copy the skill definitions to Claude's global skills directory**:
-
-   Create the directory structure for each skill:
-   ```bash
-   mkdir -p ~/.claude/skills/notion-create-note
-   mkdir -p ~/.claude/skills/notion-edit-note
-   mkdir -p ~/.claude/skills/notion-list-project-notes
-   mkdir -p ~/.claude/skills/notion-read-note
-   mkdir -p ~/.claude/skills/notion-search-notes
-   ```
-
-   Copy the skill definition files:
-   ```bash
-   cp claude-code-desktop/skill-definitions/notion-create-note.md ~/.claude/skills/notion-create-note/SKILL.md
-   cp claude-code-desktop/skill-definitions/notion-edit-note.md ~/.claude/skills/notion-edit-note/SKILL.md
-   cp claude-code-desktop/skill-definitions/notion-list-project-notes.md ~/.claude/skills/notion-list-project-notes/SKILL.md
-   cp claude-code-desktop/skill-definitions/notion-read-note.md ~/.claude/skills/notion-read-note/SKILL.md
-   cp claude-code-desktop/skill-definitions/notion-search-notes.md ~/.claude/skills/notion-search-notes/SKILL.md
-   ```
-
-   > **ℹ️ Note**: Installing to `~/.claude/skills/` makes these skills available **globally** in all Claude Code sessions. For project-specific installation, you would copy to `.claude/skills/` in your project directory instead.
-
-3. **Verify the installation**:
-   ```bash
-   ls -la ~/.claude/skills/
-   ls -la ~/.claude/scripts/notion/
-   ```
-
-   You should see:
-   - 5 skill directories in `~/.claude/skills/`
-   - 7 Python scripts in `~/.claude/scripts/notion/`
-
-### Step 7: Set Up CLAUDE.md (Optional but Recommended)
-
-This repository includes a `CLAUDE.md` file that provides additional context and instructions to Claude Code about these skills when working in a project directory.
-
-**What is CLAUDE.md?**
-- It's a project-specific instruction file that Claude Code automatically reads
-- It helps Claude understand your project structure and available tools
-- It's completely optional but highly recommended for better Claude Code integration
-
-**To use CLAUDE.md:**
-
-1. **Copy it to your working project directory** (where you use Claude Code for Notion-related work):
-   ```bash
-   # Example: If you work on Notion notes in ~/my-notes-project/
-   cp CLAUDE.md ~/my-notes-project/
-   ```
-
-2. **Or keep it in any project where you want Claude to use these Notion skills**:
-   ```bash
-   # It can be in any directory where you invoke Claude Code
-   cp CLAUDE.md /path/to/your/project/
-   ```
-
-**What does CLAUDE.md do?**
-- Tells Claude about the 5 available Notion skills
-- Explains the architecture and how skills work
-- Provides context about your Ultimate Brain setup
-- Helps Claude make better decisions about when to use which skill
-
-> **💡 Tip**: You can have CLAUDE.md in multiple project directories. Each time you work in that directory, Claude will read it and understand the Notion skills are available.
-
-### Step 8: Test the Installation
-
-1. **Test the search functionality**:
-   ```bash
-   python3 ~/.claude/scripts/notion/search_notes.py --query "test" --limit 5
-   ```
-
-   If configured correctly, you should see JSON output with your notes (or an empty list if no matches).
-
-2. **Test creating a note** (optional):
-   ```bash
-   python3 ~/.claude/scripts/notion/create_note.py --title "Test Note from Claude Code"
-   ```
-
-   Check your Notion Notes database - you should see the new note!
-
-3. **Use in Claude Code**:
-   - Open Claude Code
-   - Try asking: "Search my Notion notes for [topic]"
-   - Claude should automatically use the `notion-search-notes` skill
-
-## 🚀 Usage
-
-Once installed, the skills work automatically in Claude Code. Simply ask Claude to:
-
-- **Create a note**: "Create a new note called 'Meeting Notes' with content about..."
-- **Search notes**: "Find notes about API integration"
-- **Read a note**: "Read the note called 'Project Planning'"
-- **List project notes**: "Show me all notes in the 'Development' project"
-- **Edit a note**: "Add a section about testing to my API notes"
-
-Claude will automatically invoke the appropriate skill and parse the results.
-
-### Example Conversations
+## 🏗️ Repository Structure
 
 ```
-You: "Find notes about server configuration"
-Claude: [Uses notion-search-notes skill]
-       Found 3 notes matching "server":
-       1. Server Setup Guide
-       2. Nginx Configuration
-       3. SSL Certificate Notes
+ultimate-brain-ai-integration/
+│
+├── 📁 claude-code-desktop/
+│   ├── README.md                    # Setup & configuration guide
+│   ├── install.sh                   # Automated installation
+│   ├── validate_config.py           # Configuration checker
+│   ├── scripts/                     # Python backend
+│   │   ├── common.py               # Shared utilities & config
+│   │   ├── search_notes.py
+│   │   ├── read_note.py
+│   │   ├── list_project_notes.py
+│   │   ├── create_note.py
+│   │   ├── edit_note.py
+│   │   └── search_projects.py
+│   └── skill-definitions/           # Claude Code skill files
+│
+├── 📁 claude-ai/
+│   ├── README.md                    # Quick overview
+│   ├── SETUP_GUIDE.md              # Complete setup instructions
+│   └── n8n-workflows/
+│       ├── CONFIGURATION_GUIDE.md   # Workflow configuration
+│       ├── configure_workflows.py   # Auto-config script
+│       ├── workflow-1-search-notes.json
+│       ├── workflow-2-read-note.json
+│       ├── workflow-3-list-project-notes.json
+│       ├── workflow-4-create-note.json
+│       └── workflow-5-edit-note.json
+│
+├── README.md                        # You are here
+├── CLAUDE.md                        # Claude Code context (optional)
+├── LICENSE                          # MIT License
+└── CHANGELOG.md                     # Version history
 ```
 
+---
+
+## 💡 Choosing Between Platforms
+
+### Use Claude Code/Desktop if:
+- You prefer working locally with VS Code or Claude Desktop
+- You want offline support (once configured)
+- You prefer keeping everything on your machine
+- You're comfortable with Python and local configuration
+- You want the fastest setup (~10 minutes)
+
+### Use Claude.ai + n8n if:
+- You want web-based workflows that run automatically
+- You need scheduled task execution (e.g., daily summaries)
+- You want to share workflows with team members
+- You prefer a visual workflow builder
+- You want Claude.ai's full capabilities
+
+### Use Both if:
+- You want maximum flexibility
+- Different use cases need different approaches
+- You like having options
+
+**Good news:** Both use the same Notion data, so you can switch between them anytime!
+
+---
+
+## 🚀 Next Steps
+
+1. **Choose your platform** (see table above)
+2. **Open that platform's README:**
+   - [Claude Code/Desktop](claude-code-desktop/README.md)
+   - [Claude.ai + n8n](claude-ai/README.md)
+3. **Follow the step-by-step guide**
+4. **Verify everything works** (both guides include verification steps)
+5. **Start using your skills!**
+
+---
+
+## 📋 How the Integrations Work
+
+### Claude Code/Desktop Flow
+
 ```
-You: "Create a note called 'Daily Standup 2024-12-05' with today's updates"
-Claude: [Uses notion-create-note skill]
-       Created note "Daily Standup 2024-12-05" with 5 content blocks.
-       View it here: [Notion URL]
-```
-
-## 🏗️ Architecture
-
-### File Structure After Installation
-
-**Global Claude Code directories** (skills available in all sessions):
-```
-~/.claude/
-├── skills/                            # Global skills directory
-│   ├── notion-create-note/
-│   │   └── SKILL.md
-│   ├── notion-edit-note/
-│   │   └── SKILL.md
-│   ├── notion-list-project-notes/
-│   │   └── SKILL.md
-│   ├── notion-read-note/
-│   │   └── SKILL.md
-│   └── notion-search-notes/
-│       └── SKILL.md
-└── scripts/
-    └── notion/
-        ├── common.py                  # Shared utilities & config (YOUR DB IDs HERE)
-        ├── create_note.py            # Create new note
-        ├── edit_note.py              # Edit note content
-        ├── list_project_notes.py     # List project notes
-        ├── read_note.py              # Read note content
-        ├── search_notes.py           # Search notes
-        └── search_projects.py        # Find projects by name
-```
-
-**Secure credentials location**:
-```
-/etc/keep-to-notion/
-└── env.conf                          # Notion API token (YOUR TOKEN HERE)
-```
-
-**Project directory** (optional, for better Claude context):
-```
-/path/to/your/project/
-└── CLAUDE.md                         # Project instructions for Claude Code
-```
-
-### How It Works
-
-1. **User asks Claude** to perform a Notion operation
-2. **Claude identifies** the relevant skill based on the request
-3. **Skill invokes** the corresponding Python script
-4. **Script queries** the Notion API using your credentials
-5. **Results return** as JSON to Claude
-6. **Claude presents** the information in a readable format
-
-## 🔧 Troubleshooting
-
-### "Config file not found" Error
-
-**Problem**: Script can't find `/etc/keep-to-notion/env.conf`
-
-**Solution**:
-```bash
-sudo mkdir -p /etc/keep-to-notion
-echo "NOTION_TOKEN=your_token_here" | sudo tee /etc/keep-to-notion/env.conf
-sudo chmod 600 /etc/keep-to-notion/env.conf
+You → Claude Code → Python Scripts → Notion API → Your Notion
+                    (local)          (direct)      (data)
 ```
 
-### "API request failed" or Authentication Errors
+### Claude.ai + n8n Flow
 
-**Problem**: Integration token is invalid or databases aren't shared
+```
+You → Claude.ai → n8n Workflows → Python Scripts → Notion API → Your Notion
+     (web)       (web-based)      (container)    (direct)      (data)
+```
 
-**Solutions**:
-1. Verify token in `/etc/keep-to-notion/env.conf` matches your integration
-2. Ensure you shared both Notes and Projects databases with your integration
-3. Check token hasn't expired (regenerate if needed)
+Both access the same Notion data using secure API authentication.
 
-### "Database not found" Errors
+---
 
-**Problem**: Database IDs are incorrect
+## 🔐 Security & Privacy
 
-**Solutions**:
-1. Double-check the database IDs in `~/.claude/scripts/notion/common.py`
-2. Ensure IDs are formatted with dashes: `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
-3. Verify you're using the database ID from the URL, not the page ID
+- **Your token stays on your machine** (Claude Code) or in n8n (Claude.ai)
+- **No data sent to external services** except Notion's official API
+- **Notion integration permissions** are limited to specific databases
+- **Rate limiting** built in to respect API quotas
+- **No tracking or analytics** in the integration code
 
-### Rate Limit Errors
-
-**Problem**: Too many API requests too quickly
-
-**Solution**: The scripts include 0.3s delays between requests. This is already compliant with Notion's limits. If you still get rate limit errors, the issue may be with other integrations or manual API usage.
-
-### Notion API Quota (Free Accounts)
-
-**Good news**: Notion's free tier is very generous for personal use! As of 2024:
-- Free accounts get substantial API request quotas
-- The built-in rate limiting (0.3s delays) ensures you stay within limits
-- Typical usage of these skills won't hit quota limits
-
-If you're concerned about quota, you can:
-- Check your integration's usage at [https://www.notion.so/my-integrations](https://www.notion.so/my-integrations)
-- Upgrade to a paid plan for higher limits if needed
-
-### Skills Not Appearing in Claude Code
-
-**Problem**: Claude doesn't recognize the skills
-
-**Solutions**:
-1. Verify skill files are in `~/.claude/skills/notion-*/SKILL.md`
-2. Check YAML frontmatter format in each SKILL.md file
-3. Restart Claude Code
-4. Try explicitly asking Claude to use a skill: "Use the notion-search-notes skill to find..."
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you'd like to:
+Contributions are welcome! To contribute:
 
-- **Add new skills** (e.g., support for Tasks, Areas, Resources)
-- **Fix bugs** or improve existing functionality
-- **Enhance documentation**
+1. Open an issue describing what you'd like to improve
+2. Fork the repository
+3. Create a feature branch
+4. Submit a pull request
 
-Please open an issue or pull request on GitHub.
+Development guidelines:
+- Follow the existing code structure
+- Use `common.py` utilities for API calls
+- Ensure all scripts output valid JSON
+- Include comprehensive documentation
+- Test with actual Notion data
 
-### Development Guidelines
-
-1. Follow the existing code structure
-2. Use `common.py` utilities for API calls
-3. Ensure all scripts output JSON with `output_success()` or `output_error()`
-4. Include comprehensive docstrings
-5. Test with actual Notion data before submitting
+---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 🙏 Acknowledgments
 
 - **Thomas Frank** for creating [Ultimate Brain](https://thomasjfrank.com/brain/) - an excellent Notion template for productivity and knowledge management
 - **Anthropic** for Claude and Claude Code
 - **Notion** for their excellent API
+- **n8n** for their incredible workflow automation platform
+
+---
 
 ## 📞 Support
 
 If you encounter issues:
 
-1. Check the [Troubleshooting](#troubleshooting) section
-2. Review the [Notion API documentation](https://developers.notion.com/)
-3. Open an issue on GitHub with:
+1. **Check your platform's troubleshooting guide:**
+   - [Claude Code Troubleshooting](claude-code-desktop/README.md#-troubleshooting)
+   - [Claude.ai Troubleshooting](claude-ai/SETUP_GUIDE.md#part-5-troubleshooting)
+
+2. **Run verification/validation:**
+   - Claude Code: `python3 claude-code-desktop/validate_config.py`
+   - Claude.ai: See workflow configuration section
+
+3. **Check documentation:**
+   - [Notion API Docs](https://developers.notion.com/)
+   - [Claude Code Docs](https://code.claude.com/docs)
+   - [n8n Docs](https://docs.n8n.io/)
+
+4. **Open an issue** on GitHub with:
    - Description of the problem
    - Error messages (remove sensitive data!)
+   - Which platform you're using
    - Steps to reproduce
 
 ---
 
-**Note**: This skills system is currently optimized for reading and managing **Notes** in the Ultimate Brain system. Support for Tasks and other database components may be added in future updates.
+**Ready to start?** Choose your platform above and follow the guide! 🚀
 
-**Last updated**: 2024-12-05
+**Last updated:** 2024-12-06

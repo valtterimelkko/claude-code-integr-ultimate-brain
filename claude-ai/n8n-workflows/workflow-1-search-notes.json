@@ -1,0 +1,71 @@
+{
+  "name": "Claude MCP - Search Notes",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b3f7a2e1-9c4d-4f8a-b6e2-1a5c3d7e9f0b",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-search-notes",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "b3f7a2e1-9c4d-4f8a-b6e2-1a5c3d7e9f0b"
+    },
+    {
+      "parameters": {
+        "command": "=python3 /home/node/.claude/scripts/notion/search_notes.py --query \"{{ $json.body.query }}\"{{ $json.body.project_name ? ' --project-name \"' + $json.body.project_name + '\"' : '' }}{{ $json.body.include_archived ? ' --include-archived' : '' }} --limit {{ $json.body.limit || 10 }}"
+      },
+      "id": "exec-search-notes",
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const pythonOutput = items[0].json.stdout;\ntry {\n  return [{ json: JSON.parse(pythonOutput) }];\n} catch (e) {\n  return [{ json: { error: \"Failed to parse Python output\", raw: pythonOutput } }];\n}"
+      },
+      "id": "code-search-notes",
+      "name": "Parse JSON Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "versionId": ""
+}

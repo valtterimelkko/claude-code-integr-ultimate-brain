@@ -6,7 +6,7 @@ Choose your platform and follow the accelerated setup below. These instructions 
 
 ---
 
-## Claude Code/Desktop (5 minutes)
+## Claude Code/Desktop (10 minutes)
 
 ### Prerequisites
 - Python 3.7+
@@ -58,7 +58,7 @@ python3 ~/.claude/scripts/notion/search_notes.py --query "test" --limit 5
 
 ---
 
-## Claude.ai + n8n (10 minutes)
+## Claude.ai + n8n (30 minutes - or 15 if you already have n8n)
 
 ### Prerequisites
 - n8n instance running (v1.122.5+)

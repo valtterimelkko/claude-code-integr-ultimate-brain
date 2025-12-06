@@ -1,6 +1,15 @@
-# Notion Claude Code Skills for Ultimate Brain
+# Ultimate Brain AI Integration Toolkit
 
-A collection of Claude Code skills that enable efficient interaction with your **Thomas Frank's Ultimate Brain** Notion workspace. These skills provide structured, reliable access to your Notion Notes and Projects databases through simple, context-efficient operations.
+A comprehensive toolkit that enables seamless integration between **Thomas Frank's Ultimate Brain** Notion workspace and AI platforms—from Claude Code/Desktop to Claude.ai with n8n automation. Access your knowledge base and automate workflows across multiple platforms without extra costs or data duplication.
+
+## 🌐 Multiple Platforms, One Source of Truth
+
+Choose your integration approach:
+
+- **💻 Claude Code & Claude Desktop** - Direct integration with VS Code extension or native app
+- **🌐 Claude.ai + n8n** - Web-based automation workflows with Claude
+
+All integrations access the same Notion source of truth with structured, efficient API queries.
 
 ## 💡 Why This Matters: The Value Proposition
 
@@ -33,10 +42,38 @@ If you're already using [Ultimate Brain](https://thomasjfrank.com/brain/) to org
 
 This approach transforms Ultimate Brain from a passive information store into an **active intelligence layer** for your AI-powered work.
 
+## 🛠️ Integration Options
+
+### Option 1: Claude Code & Claude Desktop
+
+**Best for:** Direct AI conversations with your knowledge base
+
+- 💻 Works with Claude Code (VS Code extension) or Claude Desktop (native app)
+- ⚡ Real-time access to your notes and projects
+- 🔧 No extra services needed (runs locally)
+- 📚 Perfect for content creation, coding, and planning with context
+
+**Get Started:** See [claude-code-desktop/README.md](claude-code-desktop/README.md)
+
+### Option 2: Claude.ai + n8n Workflows
+
+**Best for:** Automated workflows and scheduled tasks
+
+- 🌐 Web-based Claude with workflow automation
+- 🔄 Schedule tasks and build complex automations
+- 👥 Easily share workflows with team members
+- 📊 Visual workflow builder (no coding required)
+- 💰 Free tier available
+
+**Get Started:** See [claude-ai/README.md](claude-ai/README.md)
+
+**Note:** This integration leverages Claude.ai's built-in n8n integration for seamless workflow orchestration.
+
 ## 📋 Table of Contents
 
+- [Multiple Platforms, One Source of Truth](#-multiple-platforms-one-source-of-truth)
 - [Why This Matters: The Value Proposition](#why-this-matters-the-value-proposition)
-- [Overview](#overview)
+- [Integration Options](#integration-options)
 - [Available Skills](#available-skills)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -77,7 +114,7 @@ Five skills are available for use in Claude Code:
 4. **`notion-read-note`** - Read the full content of a note
 5. **`notion-edit-note`** - Edit note content (append, replace, or clear)
 
-Each skill has comprehensive documentation in the [`skill-definitions/`](skill-definitions/) folder.
+Each skill has comprehensive documentation in the [`claude-code-desktop/skill-definitions/`](claude-code-desktop/skill-definitions/) folder.
 
 ## ✅ Prerequisites
 
@@ -169,9 +206,9 @@ You'll need the IDs for two databases: **Notes** and **Projects**.
 
 ### Step 4: Configure the Scripts
 
-1. **Edit the `scripts/common.py` file**:
+1. **Edit the `claude-code-desktop/scripts/common.py` file**:
    ```bash
-   nano scripts/common.py
+   nano claude-code-desktop/scripts/common.py
    # or use your preferred text editor
    ```
 
@@ -231,7 +268,7 @@ The scripts need to access your Notion Integration Token. We'll store it securel
 1. **Copy the scripts to Claude's scripts directory**:
    ```bash
    mkdir -p ~/.claude/scripts/notion
-   cp scripts/*.py ~/.claude/scripts/notion/
+   cp claude-code-desktop/scripts/*.py ~/.claude/scripts/notion/
    chmod +x ~/.claude/scripts/notion/*.py
    ```
 
@@ -248,11 +285,11 @@ The scripts need to access your Notion Integration Token. We'll store it securel
 
    Copy the skill definition files:
    ```bash
-   cp skill-definitions/notion-create-note.md ~/.claude/skills/notion-create-note/SKILL.md
-   cp skill-definitions/notion-edit-note.md ~/.claude/skills/notion-edit-note/SKILL.md
-   cp skill-definitions/notion-list-project-notes.md ~/.claude/skills/notion-list-project-notes/SKILL.md
-   cp skill-definitions/notion-read-note.md ~/.claude/skills/notion-read-note/SKILL.md
-   cp skill-definitions/notion-search-notes.md ~/.claude/skills/notion-search-notes/SKILL.md
+   cp claude-code-desktop/skill-definitions/notion-create-note.md ~/.claude/skills/notion-create-note/SKILL.md
+   cp claude-code-desktop/skill-definitions/notion-edit-note.md ~/.claude/skills/notion-edit-note/SKILL.md
+   cp claude-code-desktop/skill-definitions/notion-list-project-notes.md ~/.claude/skills/notion-list-project-notes/SKILL.md
+   cp claude-code-desktop/skill-definitions/notion-read-note.md ~/.claude/skills/notion-read-note/SKILL.md
+   cp claude-code-desktop/skill-definitions/notion-search-notes.md ~/.claude/skills/notion-search-notes/SKILL.md
    ```
 
    > **ℹ️ Note**: Installing to `~/.claude/skills/` makes these skills available **globally** in all Claude Code sessions. For project-specific installation, you would copy to `.claude/skills/` in your project directory instead.

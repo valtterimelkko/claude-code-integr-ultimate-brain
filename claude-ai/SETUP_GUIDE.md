@@ -25,7 +25,7 @@ Unlike standard integrations that treat Notion as a single generic destination, 
 * **Precision over Guesswork:** Because Search, Read, and Edit are separate tools, Claude doesn't blindly hallucinate note IDs or overwrite content. It creates a feedback loop where it can "look before it leaps."
 * **Context-Aware Documentation:** The `list_project_notes` tool allows Claude to instantly download the entire "context" of a project before answering your questions, effectively giving it long-term memory of your specific work history.
 * **Safety & Control:** "Inbox Zero" philosophy is built-in. New notes are created in the **Inbox** (unrelated to projects) by default, ensuring the AI doesn't misfile documents deep in your database. You remain the final organizer.
-* **Complex Editing:** The `edit_note` tool supports advanced operations like appending specific code blocks to an existing technical guide, preserving the original formatting—something generic integrations often fail at.
+* **Complex Editing with Unlimited Content:** The `edit_note` tool supports unlimited content length via internal file buffers. Claude can append entire documents, code files, or research sections without length limits—no summarization or truncation required. Original formatting is preserved automatically.
 
 ### The Tool Suite (What Claude Sees)
 
@@ -101,7 +101,7 @@ Once set up, you'll have access to 7 tools in Claude:
 2. **`notion_read_note`** - Read the full content of a note
 3. **`notion_list_project_notes`** - List all notes in a project
 4. **`notion_create_note`** - Create new notes in your Inbox
-5. **`notion_edit_note`** - Append or modify existing note content (enhanced with long-form support)
+5. **`notion_edit_note`** - Append or modify existing note content (unlimited length via file buffers)
 6. **`notion_archive_note`** (NEW) - Archive or unarchive notes
 7. **`notion_combine_notes`** (NEW) - Merge multiple notes into one
 

@@ -4,7 +4,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "f7d1e6i5-3g8h-7j2e-f0i6-5e9g7h1i3d4f",
+        "path": "notion-edit",
         "responseMode": "lastNode",
         "options": {}
       },
@@ -13,27 +13,51 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [250, 300],
-      "webhookId": "f7d1e6i5-3g8h-7j2e-f0i6-5e9g7h1i3d4f"
+      "webhookId": "notion-edit-note-v2"
     },
     {
       "parameters": {
-        "command": "=echo \"{{ ($json.body.content || '').replace(/\"/g, '\\\\\"').replace(/\\n/g, '\\n') }}\" > /tmp/temp_edit_{{ $executionId }}.txt && python3 /home/node/.claude/scripts/notion/edit_note.py --id \"{{ $json.body.id }}\" --action \"{{ $json.body.action }}\" --content-file /tmp/temp_edit_{{ $executionId }}.txt && rm -f /tmp/temp_edit_{{ $executionId }}.txt"
+        "mode": "jsonToBinary",
+        "sourceKey": "body.content",
+        "convertAllData": false,
+        "options": {}
       },
-      "id": "exec-edit-note",
-      "name": "Execute Command",
+      "id": "convert-to-file-stream",
+      "name": "Convert to File Stream",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1.0,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "=/tmp/n8n_edit_{{ $executionId }}.txt",
+        "dataPropertyName": "data"
+      },
+      "id": "write-temp-file",
+      "name": "Write Temp File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "command": "=python3 /home/node/.claude/scripts/notion/edit_note.py --id \"{{ $json.body.id }}\" --action \"{{ $json.body.action }}\" --content-file /tmp/n8n_edit_{{ $executionId }}.txt && rm /tmp/n8n_edit_{{ $executionId }}.txt"
+      },
+      "id": "run-python-script",
+      "name": "Run Python Script",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
-      "position": [470, 300]
+      "position": [910, 300]
     },
     {
       "parameters": {
         "jsCode": "const pythonOutput = items[0].json.stdout;\ntry {\n  return [{ json: JSON.parse(pythonOutput) }];\n} catch (e) {\n  return [{ json: { error: \"Failed to parse Python output\", raw: pythonOutput } }];\n}"
       },
-      "id": "code-edit-note",
-      "name": "Parse JSON Output",
+      "id": "parse-output",
+      "name": "Parse Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [690, 300]
+      "position": [1130, 300]
     }
   ],
   "connections": {
@@ -41,18 +65,40 @@
       "main": [
         [
           {
-            "node": "Execute Command",
+            "node": "Convert to File Stream",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Execute Command": {
+    "Convert to File Stream": {
       "main": [
         [
           {
-            "node": "Parse JSON Output",
+            "node": "Write Temp File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Temp File": {
+      "main": [
+        [
+          {
+            "node": "Run Python Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Python Script": {
+      "main": [
+        [
+          {
+            "node": "Parse Output",
             "type": "main",
             "index": 0
           }

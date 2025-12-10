@@ -36,7 +36,7 @@ Welcome! This folder contains everything needed to integrate your **Ultimate Bra
 2. **`notion_read_note`** - Read the full content of any note
 3. **`notion_list_project_notes`** - See all notes in a specific project
 4. **`notion_create_note`** - Create new notes in your Inbox
-5. **`notion_edit_note`** - Append or modify existing note content (enhanced with long-form support)
+5. **`notion_edit_note`** - Append or modify existing note content (unlimited length via file buffers)
 6. **`notion_archive_note`** (NEW) - Archive or unarchive notes
 7. **`notion_combine_notes`** (NEW) - Merge multiple notes into one
 

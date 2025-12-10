@@ -422,13 +422,43 @@ If you're editing JSON files manually, here are the placeholders and where they 
 ```
 
 ### workflow-5-edit-note.json
+
+This workflow implements **unlimited content handling** via an internal file buffer approach:
+
+1. **Convert to File Stream** - Converts the JSON content payload into a binary stream
+2. **Write Temp File** - Writes the content to a temporary file with unique execution ID
+3. **Run Python Script** - Calls `edit_note.py` with `--content-file` pointing to the temp file
+4. **Cleanup** - Automatically removes the temporary file after execution
+5. **Parse Output** - Converts Python JSON response to workflow output
+
+This approach allows Claude to pass **arbitrarily large content** (entire documents, code files, research sections) without hitting bash ARG_MAX shell limits. The LLM is explicitly forbidden from summarizing or truncating content.
+
 ```json
 {
   "nodes": [
     {
       "parameters": {
-        "command": "python3 /home/node/.claude/scripts/notion/edit_note.py --database YOUR_NOTES_DATABASE_ID_HERE --note-id {{ $json.note_id }}"
-      }
+        "mode": "jsonToBinary",
+        "sourceKey": "body.content",
+        "convertAllData": false
+      },
+      "name": "Convert to File Stream",
+      "type": "n8n-nodes-base.moveBinaryData"
+    },
+    {
+      "parameters": {
+        "fileName": "=/tmp/n8n_edit_{{ $executionId }}.txt",
+        "dataPropertyName": "data"
+      },
+      "name": "Write Temp File",
+      "type": "n8n-nodes-base.writeBinaryFile"
+    },
+    {
+      "parameters": {
+        "command": "=python3 /home/node/.claude/scripts/notion/edit_note.py --id \"{{ $json.body.id }}\" --action \"{{ $json.body.action }}\" --content-file /tmp/n8n_edit_{{ $executionId }}.txt && rm /tmp/n8n_edit_{{ $executionId }}.txt"
+      },
+      "name": "Run Python Script",
+      "type": "n8n-nodes-base.executeCommand"
     }
   ]
 }

@@ -93,6 +93,18 @@ Example: `2bf45010-ad5d-816a-8e25-f1f4d80a12a7`
 
 Unlike standard n8n workflows, this system uses **file-based authentication** for the Python scripts. You do **not** need to add a credential inside the n8n UI.
 
+### The 7 Available Tools
+
+Once set up, you'll have access to 7 tools in Claude:
+
+1. **`notion_search_notes`** - Search your notes by keyword
+2. **`notion_read_note`** - Read the full content of a note
+3. **`notion_list_project_notes`** - List all notes in a project
+4. **`notion_create_note`** - Create new notes in your Inbox
+5. **`notion_edit_note`** - Append or modify existing note content (enhanced with long-form support)
+6. **`notion_archive_note`** (NEW) - Archive or unarchive notes
+7. **`notion_combine_notes`** (NEW) - Merge multiple notes into one
+
 #### Step 1: Create Integration
 
 1. Go to [Notion My Integrations](https://www.notion.so/my-integrations)
@@ -140,6 +152,9 @@ These scripts should be in place:
 - `list_project_notes.py`
 - `create_note.py`
 - `edit_note.py`
+- `archive_note.py` (NEW)
+- `combine_notes.py` (NEW)
+- `search_projects.py`
 
 #### Step 3: Configure Credentials
 
@@ -257,12 +272,14 @@ docker-compose logs n8n | grep "n8n ready on"
 
 1. Open your n8n instance (usually `http://localhost:5678`)
 2. Go to **Workflows** → **Import**
-3. Upload each of these 5 JSON files:
+3. Upload each of these 7 JSON files:
    - `workflow-1-search-notes.json`
    - `workflow-2-read-note.json`
    - `workflow-3-list-project-notes.json`
    - `workflow-4-create-note.json`
    - `workflow-5-edit-note.json`
+   - `workflow-6-archive-note.json` (NEW)
+   - `workflow-7-combine-notes.json` (NEW)
 
 #### Step 2: Configure Database IDs
 
@@ -280,7 +297,7 @@ python3 configure_workflows.py \
   --output-dir ./configured
 ```
 
-This creates ready-to-import files in the `./configured/` folder.
+This creates ready-to-import files in the `./configured/` folder. It will handle all 7 workflows.
 
 **Option B: Manual Find & Replace**
 
@@ -292,7 +309,7 @@ If you prefer manual control:
    - `YOUR_PROJECTS_DATABASE_ID_HERE` → Replace with your Projects DB ID
 3. Save the file with a new name (e.g., `workflow-1-configured.json`)
 4. Import the configured file to n8n
-5. Repeat for all 5 workflow files
+5. Repeat for all 7 workflow files
 
 #### Step 3: Verify MCP Settings
 
@@ -345,8 +362,10 @@ Claude should now show you these tools:
 - `notion_list_project_notes` - List notes in a project
 - `notion_create_note` - Create a new note
 - `notion_edit_note` - Edit a note
+- `notion_archive_note` (NEW) - Archive or unarchive notes
+- `notion_combine_notes` (NEW) - Merge multiple notes
 
-Test by saying: *"Search my notes for API design"*
+Test by saying: *"Search my notes for API design"* or *"Archive my old notes from last month"*
 
 ---
 

@@ -200,7 +200,10 @@ def main():
     if failed == 0:
         print(f"✅ Configured {successful} workflows successfully!\n")
         print(f"📁 Configured files are in: {Path(args.output_dir).absolute()}/\n")
-        print("📤 Next steps:")
+        print("🎯 Configured workflows:")
+        for i, wf in enumerate(workflow_files, 1):
+            print(f"  {i}. {wf.name}")
+        print("\n📤 Next steps:")
         print("  1. Go to n8n → Workflows → Import")
         print(f"  2. Select all files from: {Path(args.output_dir).absolute()}/")
         print("  3. Click Import")

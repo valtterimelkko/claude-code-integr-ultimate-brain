@@ -52,7 +52,7 @@ Use the provided Python script to automatically update all workflow files.
 
 - Python 3.7+
 - The script file: `configure_workflows.py`
-- Your 5 workflow JSON files
+- Your 7 workflow JSON files (includes 2 new workflows: archive-note and combine-notes)
 - Your database IDs from above
 
 ### Run the Configuration Script
@@ -72,7 +72,7 @@ Replace the database IDs with your actual values.
 
 ### What It Does
 
-1. **Reads** each workflow-*.json file
+1. **Reads** each workflow-*.json file (all 7)
 2. **Finds** placeholder strings:
    - `YOUR_NOTES_DATABASE_ID_HERE`
    - `YOUR_PROJECTS_DATABASE_ID_HERE`
@@ -84,7 +84,7 @@ Replace the database IDs with your actual values.
 ### Example Output
 
 ```
-✅ Configured 5 workflows successfully!
+✅ Configured 7 workflows successfully!
 
 Changes made:
   ✓ workflow-1-search-notes.json
@@ -103,6 +103,12 @@ Changes made:
   ✓ workflow-5-edit-note.json
     - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
 
+  ✓ workflow-6-archive-note.json (NEW)
+    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+
+  ✓ workflow-7-combine-notes.json (NEW)
+    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+
 Ready to import files from: ./configured/
 ```
 
@@ -110,7 +116,7 @@ Ready to import files from: ./configured/
 
 1. All configured files are in `./configured/` folder
 2. Go to n8n → **Workflows** → **Import**
-3. Upload all 5 configured files
+3. Upload all 7 configured files
 4. Skip to [Importing to n8n](#importing-to-n8n) section below
 
 ---
@@ -190,7 +196,7 @@ Save the file with a clear name:
 mv workflow-1-search-notes.json workflow-1-search-notes.configured.json
 ```
 
-### Step 5: Repeat for All 5 Workflows
+### Step 5: Repeat for All 7 Workflows
 
 Do this for all workflow files:
 - `workflow-1-search-notes.json`
@@ -198,6 +204,8 @@ Do this for all workflow files:
 - `workflow-3-list-project-notes.json`
 - `workflow-4-create-note.json`
 - `workflow-5-edit-note.json`
+- `workflow-6-archive-note.json` (NEW)
+- `workflow-7-combine-notes.json` (NEW)
 
 ### Step 6: Verify All Changes
 
@@ -231,19 +239,21 @@ https://n8n.yourdomain.com  (cloud)
 4. Upload the first configured workflow file (e.g., `workflow-1-search-notes.json`)
 5. n8n will import and show you the workflow structure
 6. Click **Save** or **Activate** (depending on n8n version)
-7. Repeat for all 5 workflow files
+7. Repeat for all 7 workflow files
 
 ### Step 3: Verify Imports
 
-After importing all 5 workflows:
+After importing all 7 workflows:
 
 1. Go to **Workflows** page
-2. You should see all 5 listed:
+2. You should see all 7 listed:
    - search-notes
    - read-note
    - list-project-notes
    - create-note
    - edit-note
+   - archive-note (NEW)
+   - combine-notes (NEW)
 
 3. For each workflow, verify:
    - **Status:** Shows "Inactive" (will be activated once tested)
@@ -418,6 +428,32 @@ If you're editing JSON files manually, here are the placeholders and where they 
     {
       "parameters": {
         "command": "python3 /home/node/.claude/scripts/notion/edit_note.py --database YOUR_NOTES_DATABASE_ID_HERE --note-id {{ $json.note_id }}"
+      }
+    }
+  ]
+}
+```
+
+### workflow-6-archive-note.json (NEW)
+```json
+{
+  "nodes": [
+    {
+      "parameters": {
+        "command": "python3 /home/node/.claude/scripts/notion/archive_note.py --id {{ $json.id }} --action {{ $json.action || 'archive' }}"
+      }
+    }
+  ]
+}
+```
+
+### workflow-7-combine-notes.json (NEW)
+```json
+{
+  "nodes": [
+    {
+      "parameters": {
+        "command": "python3 /home/node/.claude/scripts/notion/combine_notes.py --source-ids {{ $json.source_ids.join(' ') }}{{ $json.target_id ? ' --target-id ' + $json.target_id : '' }}{{ $json.create_new ? ' --create-new ' + $json.create_new : '' }}"
       }
     }
   ]

@@ -1,0 +1,71 @@
+{
+  "name": "Claude MCP - Combine Notes",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-combine-notes",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e"
+    },
+    {
+      "parameters": {
+        "command": "=python3 /home/node/.claude/scripts/notion/combine_notes.py --source-ids {{ $json.body.source_ids.join(' ') }}{{ $json.body.target_id ? ' --target-id \"' + $json.body.target_id + '\"' : '' }}{{ $json.body.create_new ? ' --create-new \"' + $json.body.create_new + '\"' : '' }}{{ $json.body.no_archive ? ' --no-archive' : '' }}{{ $json.body.no_preserve_titles ? ' --no-preserve-titles' : '' }}{{ $json.body.no_separator ? ' --no-separator' : '' }}"
+      },
+      "id": "exec-combine-notes",
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const pythonOutput = items[0].json.stdout;\ntry {\n  return [{ json: JSON.parse(pythonOutput) }];\n} catch (e) {\n  return [{ json: { error: \"Failed to parse Python output\", raw: pythonOutput } }];\n}"
+      },
+      "id": "code-combine-notes",
+      "name": "Parse JSON Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "versionId": ""
+}

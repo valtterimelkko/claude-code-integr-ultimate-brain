@@ -4,7 +4,7 @@ Welcome! This folder contains everything needed to integrate your **Ultimate Bra
 
 ## 🎯 What You Get
 
-- **5 specialized tools** Claude can use to interact with your Notion
+- **7 specialized tools** Claude can use to interact with your Notion
 - **Web-based automation** - No local installation required
 - **Scheduled workflows** - Run tasks on a schedule or trigger them manually
 - **Team collaboration** - Share workflows with team members
@@ -28,15 +28,17 @@ Welcome! This folder contains everything needed to integrate your **Ultimate Bra
 - **[n8n-workflows/](./n8n-workflows/)** - Pre-built workflow files ready to import
   - **CONFIGURATION_GUIDE.md** - How to configure workflows with your database IDs
   - **configure_workflows.py** - Automatic configuration script
-  - **5 workflow JSON files** - Ready-to-import workflows
+  - **7 workflow JSON files** - Ready-to-import workflows
 
-## 🔧 The 5 Tools Claude Can Use
+## 🔧 The 7 Tools Claude Can Use
 
 1. **`notion_search_notes`** - Search your notes by keyword
 2. **`notion_read_note`** - Read the full content of any note
 3. **`notion_list_project_notes`** - See all notes in a specific project
 4. **`notion_create_note`** - Create new notes in your Inbox
-5. **`notion_edit_note`** - Append or modify existing note content
+5. **`notion_edit_note`** - Append or modify existing note content (enhanced with long-form support)
+6. **`notion_archive_note`** (NEW) - Archive or unarchive notes
+7. **`notion_combine_notes`** (NEW) - Merge multiple notes into one
 
 ## 🚀 Next Steps
 

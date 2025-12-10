@@ -47,13 +47,38 @@ Remove all content from the note:
 python3 ~/.claude/scripts/notion/edit_note.py --id "NOTE_ID" --action clear
 ```
 
-### Using Content File
+### Using Content File (REQUIRED for Long Content)
 
-For longer content, use a file:
+**CRITICAL: For content longer than a few paragraphs (>500 characters), you MUST use --content-file instead of --content.**
+
+Bash command-line arguments have length limits. Using `--content` with long text will fail or truncate content. Always use a temporary file for substantial content:
 
 ```bash
 python3 ~/.claude/scripts/notion/edit_note.py --id "NOTE_ID" --action append --content-file /tmp/content.txt
 ```
+
+**Best Practice Workflow:**
+
+1. Write the content to a temporary file using the Write tool
+2. Use `--content-file` parameter pointing to that file
+3. The script will read the file directly (no bash limits)
+
+Example:
+
+```bash
+# First: Create temp file with Write tool
+# /tmp/notion_content_12345.txt contains your full content
+
+# Then: Execute edit with --content-file
+python3 ~/.claude/scripts/notion/edit_note.py --id "NOTE_ID" --action append --content-file /tmp/notion_content_12345.txt
+```
+
+**When to Use Each Method:**
+
+- `--content "Short text"`: Only for brief content (< 500 characters, ~3-4 sentences)
+- `--content-file /tmp/file.txt`: For any substantial content (paragraphs, articles, long notes)
+
+**IMPORTANT**: Never summarize or truncate content to fit `--content` limits. If the user provides or requests long content, ALWAYS use the file-based approach.
 
 ## Content Formatting
 

@@ -37,7 +37,7 @@ def find_note_by_name(note_name, project_name=None):
     if project_name:
         import os
         # Try to locate the search_projects.py script
-        script_path = "~/.claude/scripts/notion/search_projects.py"
+        script_path = "/root/.claude/scripts/notion/search_projects.py"
         if not os.path.exists(script_path):
             fallback_paths = [
                 "/root/notion/scripts/skills/search_projects.py",

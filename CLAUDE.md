@@ -6,13 +6,15 @@ This directory is the home for **Notion Claude Code skills** — a set of custom
 
 ## Available Skills
 
-Five skills are available for use in Claude Code:
+Seven skills are available for use in Claude Code:
 
 1. **[`notion-create-note`](/.claude/skills/notion-create-note/SKILL.md)** - Create a new note in the Note inbox
 2. **[`notion-list-project-notes`](/.claude/skills/notion-list-project-notes/SKILL.md)** - List all notes in a specific project
 3. **[`notion-search-notes`](/.claude/skills/notion-search-notes/SKILL.md)** - Search for notes by keyword
 4. **[`notion-read-note`](/.claude/skills/notion-read-note/SKILL.md)** - Read the full content of a note
 5. **[`notion-edit-note`](/.claude/skills/notion-edit-note/SKILL.md)** - Edit note content (append, replace, or clear)
+6. **[`notion-archive-note`](/.claude/skills/notion-archive-note/SKILL.md)** - Archive or unarchive a note
+7. **[`notion-combine-notes`](/.claude/skills/notion-combine-notes/SKILL.md)** - Combine multiple notes into one
 
 ## Architecture
 
@@ -20,6 +22,10 @@ The skills are built on a **script-based architecture** for reliability and cont
 
 ```
 ~/.claude/skills/
+├── notion-archive-note/
+│   └── SKILL.md
+├── notion-combine-notes/
+│   └── SKILL.md
 ├── notion-create-note/
 │   └── SKILL.md
 ├── notion-edit-note/
@@ -31,14 +37,16 @@ The skills are built on a **script-based architecture** for reliability and cont
 └── notion-search-notes/
     └── SKILL.md
 
-/root/notion/scripts/skills/       # Backend scripts
+~/.claude/scripts/notion/           # Backend scripts
 ├── common.py                       # Shared utilities & API helpers
+├── archive_note.py                 # Archive/unarchive note
+├── combine_notes.py                # Combine multiple notes
 ├── create_note.py                  # Create new note
-├── search_projects.py              # Find projects by name
+├── edit_note.py                    # Edit note content
 ├── list_project_notes.py           # List project notes
-├── search_notes.py                 # Search notes by keyword
 ├── read_note.py                    # Read note content
-└── edit_note.py                    # Edit note content
+├── search_notes.py                 # Search notes by keyword
+└── search_projects.py              # Find projects by name
 ```
 
 ## How the Skills Work
@@ -105,6 +113,6 @@ For bugfixes or improvements to existing scripts, update the corresponding `.py`
 
 ---
 
-**Last updated**: 2025-12-04
-**Skills created**: 5 (create-note, list-project-notes, search-notes, read-note, edit-note)
-**Skill scripts**: 7 (common.py + 6 feature scripts)
+**Last updated**: 2025-12-10
+**Skills created**: 7 (create-note, list-project-notes, search-notes, read-note, edit-note, archive-note, combine-notes)
+**Skill scripts**: 9 (common.py + 8 feature scripts)

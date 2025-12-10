@@ -4,7 +4,7 @@ This folder contains all resources for integrating Ultimate Brain with **Claude 
 
 ## 🎯 What You Get
 
-- **5 specialized Claude Code skills** to interact with your Notion
+- **7 specialized Claude Code skills** to interact with your Notion
 - **Local Python backend** - No cloud infrastructure needed
 - **Works offline** - Once configured
 - **Fast** - Direct local API calls
@@ -33,7 +33,7 @@ See [Manual Installation](#manual-installation) section below.
 
 **Estimated time:** ~5-10 minutes with automation, ~15-20 minutes manually
 
-## 🚀 The 5 Skills
+## 🚀 The 7 Skills
 
 Once configured, Claude will have access to these tools:
 
@@ -41,15 +41,19 @@ Once configured, Claude will have access to these tools:
 2. **`notion_read_note`** - Read the full content of a note
 3. **`notion_list_project_notes`** - See all notes in a project
 4. **`notion_create_note`** - Create new notes in your Inbox
-5. **`notion_edit_note`** - Append or modify existing notes
+5. **`notion_edit_note`** - Append or modify existing notes (enhanced with long-form support)
+6. **`notion_archive_note`** (NEW) - Archive or unarchive notes
+7. **`notion_combine_notes`** (NEW) - Merge multiple notes into one
 
 ## 📂 What's Inside
 
 ### Scripts (`scripts/`)
 
 - **`common.py`** - Shared utilities, API configuration, credential loading
+- **`archive_note.py`** (NEW) - Archive or unarchive notes
+- **`combine_notes.py`** (NEW) - Merge multiple notes into one
 - **`create_note.py`** - Create new notes in Notion
-- **`edit_note.py`** - Edit existing note content
+- **`edit_note.py`** - Edit existing note content (enhanced)
 - **`list_project_notes.py`** - List all notes in a project
 - **`read_note.py`** - Read full note content
 - **`search_notes.py`** - Search notes by keyword
@@ -57,8 +61,10 @@ Once configured, Claude will have access to these tools:
 
 ### Skill Definitions (`skill-definitions/`)
 
+- **`notion-archive-note.md`** (NEW) - Archive note skill documentation
+- **`notion-combine-notes.md`** (NEW) - Combine notes skill documentation
 - **`notion-create-note.md`** - Create note skill documentation
-- **`notion-edit-note.md`** - Edit note skill documentation
+- **`notion-edit-note.md`** - Edit note skill documentation (enhanced)
 - **`notion-list-project-notes.md`** - List project notes skill documentation
 - **`notion-read-note.md`** - Read note skill documentation
 - **`notion-search-notes.md`** - Search notes skill documentation

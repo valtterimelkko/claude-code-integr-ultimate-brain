@@ -196,7 +196,7 @@ phase_install_files() {
     # Create .claude directories
     print_info "Creating ~/.claude directories..."
     mkdir -p ~/.claude/scripts/notion
-    mkdir -p ~/.claude/skills/notion-{search-notes,read-note,list-project-notes,create-note,edit-note}
+    mkdir -p ~/.claude/skills/notion-{search-notes,read-note,list-project-notes,create-note,edit-note,archive-note,combine-notes}
 
     # Copy Python scripts
     print_info "Copying Python scripts..."
@@ -206,7 +206,7 @@ phase_install_files() {
 
     # Copy skill definitions
     print_info "Copying skill definitions..."
-    for skill in search-notes read-note list-project-notes create-note edit-note; do
+    for skill in search-notes read-note list-project-notes create-note edit-note archive-note combine-notes; do
         if [ -f "$script_dir/skill-definitions/notion-$skill.md" ]; then
             cp "$script_dir/skill-definitions/notion-$skill.md" ~/.claude/skills/notion-$skill/SKILL.md
         fi
@@ -229,7 +229,7 @@ phase_verify_installation() {
 
     # Check Python scripts exist and are executable
     print_info "Checking Python scripts..."
-    for script in search_notes.py read_note.py list_project_notes.py create_note.py edit_note.py search_projects.py common.py; do
+    for script in search_notes.py read_note.py list_project_notes.py create_note.py edit_note.py archive_note.py combine_notes.py search_projects.py common.py; do
         if [ -f ~/.claude/scripts/notion/$script ]; then
             print_success "Found $script"
         else
@@ -240,7 +240,7 @@ phase_verify_installation() {
 
     # Check skill definitions exist
     print_info "Checking skill definitions..."
-    for skill in search-notes read-note list-project-notes create-note edit-note; do
+    for skill in search-notes read-note list-project-notes create-note edit-note archive-note combine-notes; do
         if [ -f ~/.claude/skills/notion-$skill/SKILL.md ]; then
             print_success "Found notion-$skill skill"
         else
@@ -311,12 +311,14 @@ phase_success_message() {
     echo ""
     echo "🚀 Next steps:"
     echo "  1. Restart Claude Code (VS Code) or Claude Desktop"
-    echo "  2. The 5 skills should appear in Claude's tool list:"
+    echo "  2. The 7 skills should appear in Claude's tool list:"
     echo "     - notion_search_notes"
     echo "     - notion_read_note"
     echo "     - notion_list_project_notes"
     echo "     - notion_create_note"
     echo "     - notion_edit_note"
+    echo "     - notion_archive_note (NEW)"
+    echo "     - notion_combine_notes (NEW)"
     echo "  3. Try asking Claude: 'Search my notes for test'"
     echo ""
     echo "📚 For more help:"

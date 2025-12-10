@@ -99,13 +99,15 @@ Quick preview:
 
 ## ⚡ Available Capabilities
 
-Both platforms provide access to these 5 core operations:
+Both platforms provide access to these 7 core operations:
 
 1. **Search Notes** - Find notes by keyword or project
 2. **Read Notes** - Get full content of any note
 3. **List Project Notes** - See all notes in a specific project
 4. **Create Notes** - Add new notes to your brain
-5. **Edit Notes** - Append or modify existing content
+5. **Edit Notes** - Append or modify existing content (with improved long-form support)
+6. **Archive Notes** - Archive or unarchive notes to keep workspace organized
+7. **Combine Notes** - Merge multiple notes into one with automatic source archiving
 
 ---
 
@@ -140,7 +142,9 @@ ultimate-brain-ai-integration/
 │   │   ├── read_note.py
 │   │   ├── list_project_notes.py
 │   │   ├── create_note.py
-│   │   ├── edit_note.py
+│   │   ├── edit_note.py            # Enhanced with --content-file support
+│   │   ├── archive_note.py         # New: Archive/unarchive notes
+│   │   ├── combine_notes.py        # New: Merge multiple notes
 │   │   └── search_projects.py
 │   └── skill-definitions/           # Claude Code skill files
 │
@@ -291,4 +295,14 @@ If you encounter issues:
 
 **Ready to start?** Choose your platform above and follow the guide! 🚀
 
-**Last updated:** 2024-12-06
+**Last updated:** 2025-12-10
+
+## 📋 Recent Updates (v2.0)
+
+**New Skills Added:**
+- **Archive Note** - Archive/unarchive notes to keep workspace organized
+- **Combine Notes** - Merge multiple notes into one (solves bash length limits)
+
+**Enhancements:**
+- **Edit Note** - Now forces use of `--content-file` for long content (>500 chars) to prevent truncation
+- Better handling of long-form content without bash argument limitations

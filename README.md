@@ -23,6 +23,8 @@ All integrations access the same Notion source of truth with structured, efficie
 
 If you're already using [Ultimate Brain](https://thomasjfrank.com/brain/) to organize your projects, notes, and knowledge, these skills unlock powerful AI-first workflows:
 
+If you also want a companion system for keeping your Notes database tidy over time, see **[Notion Janitor](https://github.com/valtterimelkko/NotionJanitor)** — a separate self-hosted weekly cleanup assistant for Ultimate Brain that reviews stale notes in Telegram and lets you keep or archive them deliberately.
+
 ### 🔍 **AI-First Information Access**
 - **Find and retrieve** your information at speed using natural language instead of manual Notion navigation
 - **Quick edits** to your knowledge base without context-switching away from your AI workflow

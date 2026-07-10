@@ -13,15 +13,19 @@ This module provides:
 
 import json
 import sys
+from pathlib import Path
+
+from config import config_path, load_config
 
 # ============================================================================
 # CONSTANTS
 # ============================================================================
 
-# Database IDs (formatted with dashes for API calls)
-# REPLACE THESE WITH YOUR ACTUAL DATABASE IDs FROM YOUR ULTIMATE BRAIN SETUP
-NOTES_DB_ID = "YOUR_NOTES_DATABASE_ID_HERE"
-PROJECTS_DB_ID = "YOUR_PROJECTS_DATABASE_ID_HERE"
+# Database IDs are read from the user-local config file when available.
+# Placeholders keep the scripts importable before first-run setup.
+_CONFIG = load_config()
+NOTES_DB_ID = _CONFIG.get("NOTES_DB_ID", "YOUR_NOTES_DATABASE_ID_HERE")
+PROJECTS_DB_ID = _CONFIG.get("PROJECTS_DB_ID", "YOUR_PROJECTS_DATABASE_ID_HERE")
 
 # API configuration
 NOTION_API_VERSION = "2022-06-28"
@@ -41,16 +45,20 @@ def load_credentials():
     Raises:
         SystemExit: If token cannot be loaded
     """
-    try:
-        with open('/etc/keep-to-notion/env.conf') as f:
-            for line in f:
-                if line.startswith('NOTION_TOKEN='):
-                    return line.split('=', 1)[1].strip()
-        output_error("NOTION_TOKEN not found in config file")
-        sys.exit(1)
-    except FileNotFoundError:
-        output_error("Config file not found: /etc/keep-to-notion/env.conf")
-        sys.exit(1)
+    config = load_config()
+    token = config.get("NOTION_TOKEN", "").strip()
+    if token:
+        return token
+    output_error(
+        "NOTION_TOKEN not found. Run install.sh or set NOTION_CONFIG_FILE "
+        f"(expected {config_path()})"
+    )
+    sys.exit(1)
+
+def sibling_script(name):
+    """Return a script installed alongside the current script."""
+    return Path(__file__).with_name(name)
+
 
 def get_headers():
     """

@@ -22,7 +22,7 @@ import sys
 def validate_database_id(db_id, name):
     """Validate that a database ID looks correct."""
     if not db_id or len(db_id) < 10:
-        print(f"❌ Error: {name} is too short. Expected format: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7")
+        print(f"❌ Error: {name} is too short. Expected a Notion database ID (typically a 32-character UUID)")
         return False
     if " " in db_id:
         print(f"❌ Error: {name} contains spaces. Remove any extra whitespace.")

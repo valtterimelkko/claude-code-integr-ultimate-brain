@@ -52,7 +52,7 @@ The skills are built on a **script-based architecture** for reliability and cont
 ## How the Skills Work
 
 Each skill invokes a corresponding Python script that:
-- Loads credentials from `/etc/keep-to-notion/env.conf`
+- Loads credentials and database IDs from the user-local config file (`$XDG_CONFIG_HOME/ultimate-brain-notion/env.conf` or `~/.config/ultimate-brain-notion/env.conf`)
 - Queries the Notion API v2022-06-28
 - Returns structured JSON output
 - Implements automatic filtering (excludes archived items by default)
@@ -68,10 +68,12 @@ Each skill invokes a corresponding Python script that:
 
 ## Target Databases
 
-| Database | ID | Purpose |
-|----------|-----|---------|
-| Notes | `2bf45010-ad5d-816a-8e25-f1f4d80a12a7` | Primary note storage |
-| Projects | `2bf45010-ad5d-81c7-9372-e7de7a11a0df` | Project organization |
+Database IDs are intentionally configured locally and are not committed to this public repository.
+
+| Database | Configuration key | Purpose |
+|----------|-------------------|---------|
+| Notes | `NOTES_DB_ID` | Primary note storage |
+| Projects | `PROJECTS_DB_ID` | Project organisation |
 
 ## Using the Skills
 
@@ -88,7 +90,7 @@ Each skill invokes a corresponding Python script that:
 
 - **Python version**: 3.7+
 - **Dependencies**: `requests` library
-- **Credentials**: Loaded from `/etc/keep-to-notion/env.conf`
+- **Credentials**: Loaded from the user-local `env.conf` configuration file
 - **API Rate Limit**: Respects 3 requests/second with built-in delays
 - **Archived Filter**: Property name `Archived`, checkbox type, default `False`
 
@@ -96,7 +98,7 @@ Each skill invokes a corresponding Python script that:
 
 To add a new skill following Anthropic's conventions:
 
-1. Create a Python script in `/root/notion/scripts/skills/`
+1. Create a Python script in `claude-code-desktop/scripts/`
 2. Import and use utilities from `common.py`
 3. Ensure JSON output with `output_success()` or `output_error()`
 4. Create a skill directory: `~/.claude/skills/notion-{action-name}/`

@@ -8,7 +8,7 @@ This folder contains all resources for integrating Ultimate Brain with **Claude 
 - **Local Python backend** - No cloud infrastructure needed
 - **Works offline** - Once configured
 - **Fast** - Direct local API calls
-- **Secure** - Token stored locally in `/etc/keep-to-notion/env.conf`
+- **Secure** - Token stored in a user-local config file with permissions `600`
 
 ## 📋 Quick Start
 
@@ -21,11 +21,11 @@ chmod +x install.sh
 ```
 
 This script will:
-1. Prompt for your database IDs
-2. Update configuration automatically
+1. Prompt for your database IDs and token
+2. Write them to `~/.config/ultimate-brain-notion/env.conf` (or `$XDG_CONFIG_HOME`)
 3. Copy files to `~/.claude/`
 4. Set correct permissions
-5. Verify everything works
+5. Run an offline import check without contacting Notion
 
 **Option 2: Manual Installation**
 
@@ -49,7 +49,8 @@ Once configured, Claude will have access to these tools:
 
 ### Scripts (`scripts/`)
 
-- **`common.py`** - Shared utilities, API configuration, credential loading
+- **`common.py`** - Shared utilities and API helpers
+- **`config.py`** - User-local configuration loading with legacy fallback
 - **`archive_note.py`** (NEW) - Archive or unarchive notes
 - **`combine_notes.py`** (NEW) - Merge multiple notes into one
 - **`create_note.py`** - Create new notes in Notion
@@ -87,14 +88,12 @@ chmod +x install.sh
 Follow the prompts to enter your database IDs and Notion token.
 
 **What it does:**
-1. Checks Python 3 is installed
-2. Prompts for your database IDs
-3. Prompts for your Notion token
-4. Updates `scripts/common.py` with your IDs
-5. Creates `/etc/keep-to-notion/env.conf` with your token
-6. Copies scripts to `~/.claude/scripts/notion/`
-7. Copies skill definitions to `~/.claude/skills/notion-*/`
-8. Verifies everything is set up correctly
+1. Checks Python 3 and `requests` are installed
+2. Prompts for your database IDs and Notion token
+3. Writes a user-local config file outside the repository
+4. Copies scripts to `~/.claude/scripts/notion/`
+5. Copies skill definitions to `~/.claude/skills/notion-*/`
+6. Verifies the installation without modifying the repository or making an API request
 
 ### Manual Installation
 
@@ -110,38 +109,21 @@ If you prefer manual control:
 
 #### Step 2: Create Configuration File
 
-```bash
-# Create the directory
-sudo mkdir -p /etc/keep-to-notion
-
-# Create the config file (replace with your token)
-echo "NOTION_TOKEN=secret_your_actual_token_here" | sudo tee /etc/keep-to-notion/env.conf
-
-# Set correct permissions
-sudo chmod 600 /etc/keep-to-notion/env.conf
-```
-
-#### Step 3: Update Database IDs
-
-Edit `scripts/common.py`:
+The scripts read database IDs and the token from a user-local file. This keeps
+credentials and personal database identifiers out of the repository and makes
+updating the installed copy safer.
 
 ```bash
-nano scripts/common.py
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion"
+cat > "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf" <<'EOF'
+NOTES_DB_ID=your-notes-database-id
+PROJECTS_DB_ID=your-projects-database-id
+NOTION_TOKEN=secret_your_actual_token_here
+EOF
+chmod 600 "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf"
 ```
 
-Find these lines (around line 22-23):
-
-```python
-NOTES_DB_ID = "YOUR_NOTES_DATABASE_ID_HERE"
-PROJECTS_DB_ID = "YOUR_PROJECTS_DATABASE_ID_HERE"
-```
-
-Replace with your actual database IDs:
-
-```python
-NOTES_DB_ID = "2bf45010-ad5d-816a-8e25-f1f4d80a12a7"
-PROJECTS_DB_ID = "1234abcd-5678-efgh-ijkl-mnopqrstuvwx"
-```
+Set `NOTION_CONFIG_FILE` if you need a different location.
 
 #### Step 4: Copy Files
 
@@ -233,8 +215,7 @@ Both should return valid JSON responses. If they do, you're ready to use Claude!
        │ Reads config
        ▼
 ┌──────────────────────┐
-│  common.py config    │ (database IDs)
-│  env.conf (token)    │
+│  env.conf config     │ (IDs and token)
 └──────┬───────────────┘
        │ Makes API calls
        ▼
@@ -276,12 +257,12 @@ Both should return valid JSON responses. If they do, you're ready to use Claude!
 **Solution:**
 1. Check file permissions:
    ```bash
-   ls -la /etc/keep-to-notion/env.conf
+   ls -la "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf"
    # Should show: -rw------- (not just -rw-r--r--)
    ```
 2. If wrong, fix permissions:
    ```bash
-   sudo chmod 600 /etc/keep-to-notion/env.conf
+   chmod 600 "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf"
    ```
 
 ### "Module not found" or "requests" error
@@ -297,9 +278,9 @@ pip3 install requests
 
 ## 🔐 Security Notes
 
-- Your Notion token is stored in `/etc/keep-to-notion/env.conf` with restricted permissions (600)
-- Only your user can read the token file
-- Database IDs are in `scripts/common.py` (not secret, but useful to keep private)
+- Your Notion token and database IDs are stored in the user-local config file with restricted permissions (600)
+- The installer does not write credentials into the repository or mutate its source scripts
+- A legacy `/etc/keep-to-notion/env.conf` file is read only as a compatibility fallback
 - Scripts execute locally on your machine
 - No data is sent to external servers except Notion's API
 

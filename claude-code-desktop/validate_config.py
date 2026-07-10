@@ -19,6 +19,10 @@ import json
 import subprocess
 from pathlib import Path
 
+SCRIPTS_SOURCE_DIR = Path(__file__).resolve().parent / "scripts"
+sys.path.insert(0, str(SCRIPTS_SOURCE_DIR))
+from config import existing_config_path, load_config  # noqa: E402
+
 
 class ConfigValidator:
     """Validates Ultimate Brain configuration."""
@@ -30,7 +34,7 @@ class ConfigValidator:
         self.claude_dir = Path.home() / ".claude"
         self.scripts_dir = self.claude_dir / "scripts" / "notion"
         self.skills_dir = self.claude_dir / "skills"
-        self.token_file = Path("/etc/keep-to-notion/env.conf")
+        self.token_file = existing_config_path()
 
     def check(self, name, func):
         """Run a check and track results."""
@@ -47,31 +51,20 @@ class ConfigValidator:
     # ========================================================================
 
     def check_common_py(self):
-        """Check if common.py exists and has database IDs."""
+        """Check that scripts and user-local database configuration exist."""
         common_py = self.scripts_dir / "common.py"
 
         if not common_py.exists():
             self.errors.append("Python scripts not found at ~/.claude/scripts/notion/")
             return False
 
-        with open(common_py) as f:
-            content = f.read()
-
-        if "YOUR_NOTES_DATABASE_ID_HERE" in content:
+        config = load_config()
+        missing = [key for key in ("NOTES_DB_ID", "PROJECTS_DB_ID") if not config.get(key)]
+        if missing:
             self.errors.append(
-                "Database IDs not configured in scripts/common.py\n"
-                "    Please edit: ~/.claude/scripts/notion/common.py\n"
-                "    Replace: YOUR_NOTES_DATABASE_ID_HERE → your actual ID\n"
-                "    Replace: YOUR_PROJECTS_DATABASE_ID_HERE → your actual ID\n"
+                "Missing database configuration: " + ", ".join(missing) + "\n"
+                f"    Configure: {self.token_file}\n"
                 "    Or run: ./install.sh to configure automatically"
-            )
-            return False
-
-        if "YOUR_PROJECTS_DATABASE_ID_HERE" in content:
-            self.errors.append(
-                "Projects database ID not configured in scripts/common.py\n"
-                "    Please edit: ~/.claude/scripts/notion/common.py\n"
-                "    Replace: YOUR_PROJECTS_DATABASE_ID_HERE → your actual ID"
             )
             return False
 
@@ -81,6 +74,7 @@ class ConfigValidator:
         """Check if all required scripts are installed."""
         required_scripts = [
             "common.py",
+            "config.py",
             "search_notes.py",
             "read_note.py",
             "list_project_notes.py",
@@ -135,7 +129,6 @@ class ConfigValidator:
         if not self.token_file.exists():
             self.errors.append(
                 f"Notion token file not found: {self.token_file}\n"
-                "    Create it with: echo 'NOTION_TOKEN=secret_...' | sudo tee {self.token_file}\n"
                 "    Or run: ./install.sh to create it automatically"
             )
             return False
@@ -198,7 +191,7 @@ class ConfigValidator:
             if "NOTION_TOKEN" in stderr or "permission" in stderr.lower():
                 self.errors.append(
                     "Cannot connect to Notion API - token may be invalid or expired\n"
-                    "    Update your token at: /etc/keep-to-notion/env.conf\n"
+                    f"    Update your token at: {self.token_file}\n"
                     "    Get a new token: https://www.notion.so/my-integrations"
                 )
             else:

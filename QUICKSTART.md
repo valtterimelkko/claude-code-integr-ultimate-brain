@@ -93,14 +93,18 @@ docker-compose up -d --build
 #### 2. Configure Credentials
 
 ```bash
-# Create config directory
-sudo mkdir -p /etc/keep-to-notion
+# Create a user-local config directory
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion"
 
-# Add Notion token
-echo "NOTION_TOKEN=secret_your_token_here" | sudo tee /etc/keep-to-notion/env.conf
+# Add Notion token and database IDs
+cat > "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf" <<'EOF'
+NOTION_TOKEN=secret_your_token_here
+NOTES_DB_ID=your-notes-database-id
+PROJECTS_DB_ID=your-projects-database-id
+EOF
 
 # Set permissions
-sudo chmod 600 /etc/keep-to-notion/env.conf
+chmod 600 "${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf"
 ```
 
 #### 3. Configure Workflows

@@ -54,12 +54,11 @@ phase_check_prerequisites() {
     python_version=$(python3 --version 2>&1 | awk '{print $2}')
     print_info "Found Python $python_version"
 
-    # Check requests library
+    # Check requests library without modifying the user's Python installation.
     if ! python3 -c "import requests" 2>/dev/null; then
-        print_warning "Python 'requests' library not found"
-        echo "Installing with: pip3 install requests"
-        pip3 install requests
-        print_success "Installed requests library"
+        print_error "Python 'requests' library is not installed"
+        echo "Install it in your chosen environment with: python3 -m pip install requests"
+        exit 1
     else
         print_success "Python 'requests' library is installed"
     fi
@@ -138,50 +137,23 @@ phase_gather_configuration() {
 phase_update_configuration() {
     print_header "Updating Configuration Files"
 
-    # Get the directory where this script is located
-    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    common_py="$script_dir/scripts/common.py"
+    # Keep credentials and database IDs outside the repository and source copies.
+    config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+    config_dir="$config_home/ultimate-brain-notion"
+    notion_config_file="$config_dir/env.conf"
+    mkdir -p "$config_dir"
+    umask 077
 
-    if [ ! -f "$common_py" ]; then
-        print_error "Cannot find scripts/common.py"
-        exit 1
-    fi
+    cat > "$notion_config_file" <<EOF
+NOTES_DB_ID=$notes_db_id
+PROJECTS_DB_ID=$projects_db_id
+NOTION_TOKEN=$notion_token
+EOF
+    chmod 600 "$notion_config_file"
+    export NOTION_CONFIG_FILE="$notion_config_file"
 
-    # Create a backup
-    cp "$common_py" "$common_py.backup"
-    print_info "Created backup: $common_py.backup"
-
-    # Update database IDs in common.py
-    # Escape special characters for sed
-    notes_db_escaped=$(printf '%s\n' "$notes_db_id" | sed -e 's/[\/&]/\\&/g')
-    projects_db_escaped=$(printf '%s\n' "$projects_db_id" | sed -e 's/[\/&]/\\&/g')
-
-    sed -i.tmp "s/NOTES_DB_ID = \"YOUR_NOTES_DATABASE_ID_HERE\"/NOTES_DB_ID = \"$notes_db_escaped\"/" "$common_py"
-    sed -i.tmp "s/PROJECTS_DB_ID = \"YOUR_PROJECTS_DATABASE_ID_HERE\"/PROJECTS_DB_ID = \"$projects_db_escaped\"/" "$common_py"
-    rm -f "$common_py.tmp"
-
-    print_success "Updated database IDs in scripts/common.py"
-
-    # Create credential file
-    print_info "Creating credential file at /etc/keep-to-notion/env.conf"
-
-    if [ -f /etc/keep-to-notion/env.conf ]; then
-        print_warning "Credential file already exists - will update it"
-        sudo cp /etc/keep-to-notion/env.conf /etc/keep-to-notion/env.conf.backup
-        print_info "Backed up existing config"
-    fi
-
-    # Create directory if it doesn't exist
-    sudo mkdir -p /etc/keep-to-notion
-
-    # Write the token to the config file
-    echo "NOTION_TOKEN=$notion_token" | sudo tee /etc/keep-to-notion/env.conf > /dev/null
-
-    # Set permissions (read-only for current user, no access for others)
-    sudo chmod 600 /etc/keep-to-notion/env.conf
-
-    print_success "Created credential file"
-    print_info "Permissions set to 600 (current user only)"
+    print_success "Created user-local configuration at $notion_config_file"
+    print_info "The repository and installed Python scripts were not modified"
 }
 
 # ============================================================================
@@ -249,18 +221,20 @@ phase_verify_installation() {
         fi
     done
 
-    # Check credential file
+    # Check user-local credential file
+    config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+    notion_config_file="${NOTION_CONFIG_FILE:-$config_home/ultimate-brain-notion/env.conf}"
     print_info "Checking credential file..."
-    if [ -f /etc/keep-to-notion/env.conf ]; then
+    if [ -f "$notion_config_file" ]; then
         print_success "Credential file exists"
-        if grep -q "NOTION_TOKEN=" /etc/keep-to-notion/env.conf; then
+        if grep -q "^NOTION_TOKEN=" "$notion_config_file"; then
             print_success "Notion token is configured"
         else
             print_error "Notion token not found in credential file"
             ((errors++))
         fi
     else
-        print_error "Credential file not found"
+        print_error "Credential file not found: $notion_config_file"
         ((errors++))
     fi
 
@@ -280,16 +254,14 @@ phase_verify_installation() {
 phase_test_installation() {
     print_header "Testing Installation"
 
-    print_info "Attempting to test Python scripts..."
-    print_info "This will verify that scripts can execute and access your database IDs..."
-    echo ""
-
-    # Try to list projects
-    if python3 ~/.claude/scripts/notion/search_projects.py --name "test" --limit 1 2>/dev/null | grep -q '"success"'; then
-        print_success "Scripts can execute successfully"
+    # Import configuration and script dependencies only; do not contact Notion.
+    if NOTION_CONFIG_FILE="${NOTION_CONFIG_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf}" \
+        PYTHONPATH="$HOME/.claude/scripts/notion" \
+        python3 -c "import common; assert common.NOTES_DB_ID and common.PROJECTS_DB_ID"; then
+        print_success "Scripts can import configuration successfully"
     else
-        print_warning "Could not execute a test query"
-        print_info "This might be normal if your Notion token or database IDs are incomplete"
+        print_error "Installed scripts could not load configuration"
+        return 1
     fi
 }
 
@@ -306,7 +278,7 @@ phase_success_message() {
     echo "📋 What was installed:"
     echo "  ✓ Python scripts for Notion interaction"
     echo "  ✓ Claude Code skill definitions"
-    echo "  ✓ Configuration with your database IDs"
+    echo "  ✓ User-local configuration with database IDs"
     echo "  ✓ Notion API token (secure file)"
     echo ""
     echo "🚀 Next steps:"
@@ -326,8 +298,7 @@ phase_success_message() {
     echo "  - Check: $script_dir/../README.md (main repository)"
     echo ""
     echo "⚙️  Configuration files:"
-    echo "  - Database IDs: $script_dir/scripts/common.py"
-    echo "  - Notion Token: /etc/keep-to-notion/env.conf"
+    echo "  - Database IDs and token: ${NOTION_CONFIG_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/ultimate-brain-notion/env.conf}"
     echo ""
 }
 

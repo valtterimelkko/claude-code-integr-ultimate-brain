@@ -83,7 +83,7 @@ In Notion:
 3. Extract the part after `workspace/` and before `?` → That's your Notes DB ID
 4. Repeat for your Projects database
 
-Example: `2bf45010-ad5d-816a-8e25-f1f4d80a12a7`
+Example: `YOUR_NOTES_DATABASE_ID_HERE`
 
 ---
 

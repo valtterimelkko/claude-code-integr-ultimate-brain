@@ -32,12 +32,12 @@ Before you can configure the workflows, you need your Notion database IDs.
 
 If your URL is:
 ```
-https://notion.so/workspace/2bf45010-ad5d-816a-8e25-f1f4d80a12a7?v=abc123
+https://notion.so/workspace/YOUR_NOTES_DATABASE_ID_HERE?v=abc123
 ```
 
 Your Database ID is:
 ```
-2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+YOUR_NOTES_DATABASE_ID_HERE
 ```
 
 **Keep these IDs handy** - you'll need them in the next section.
@@ -63,7 +63,7 @@ cd claude-ai/n8n-workflows
 
 # Run the configuration script
 python3 configure_workflows.py \
-  --notes-db "2bf45010-ad5d-816a-8e25-f1f4d80a12a7" \
+  --notes-db "YOUR_NOTES_DATABASE_ID_HERE" \
   --projects-db "1234abcd-5678-efgh-ijkl-mnopqrstuvwx" \
   --output-dir ./configured
 ```
@@ -88,26 +88,26 @@ Replace the database IDs with your actual values.
 
 Changes made:
   ✓ workflow-1-search-notes.json
-    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+    - Notes DB ID: YOUR_NOTES_DATABASE_ID_HERE
     - Projects DB ID: 1234abcd-5678-efgh-ijkl-mnopqrstuvwx
 
   ✓ workflow-2-read-note.json
-    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+    - Notes DB ID: YOUR_NOTES_DATABASE_ID_HERE
 
   ✓ workflow-3-list-project-notes.json
     - Projects DB ID: 1234abcd-5678-efgh-ijkl-mnopqrstuvwx
 
   ✓ workflow-4-create-note.json
-    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+    - Notes DB ID: YOUR_NOTES_DATABASE_ID_HERE
 
   ✓ workflow-5-edit-note.json
-    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+    - Notes DB ID: YOUR_NOTES_DATABASE_ID_HERE
 
   ✓ workflow-6-archive-note.json (NEW)
-    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+    - Notes DB ID: YOUR_NOTES_DATABASE_ID_HERE
 
   ✓ workflow-7-combine-notes.json (NEW)
-    - Notes DB ID: 2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+    - Notes DB ID: YOUR_NOTES_DATABASE_ID_HERE
 
 Ready to import files from: ./configured/
 ```
@@ -145,7 +145,7 @@ YOUR_NOTES_DATABASE_ID_HERE
 
 **Replace with:** Your Notes database ID
 ```
-2bf45010-ad5d-816a-8e25-f1f4d80a12a7
+YOUR_NOTES_DATABASE_ID_HERE
 ```
 
 ---
@@ -297,7 +297,7 @@ Once tested:
 **Fix:**
 1. Open the file in a text editor
 2. Look for common issues:
-   - Missing quotes: `"database_id": 2bf45010...` → should be `"database_id": "2bf45010..."`
+   - Missing quotes: `"database_id": YOUR_DATABASE_ID` → should be `"database_id": "YOUR_DATABASE_ID"`
    - Extra commas: `"field": "value",}` → remove the comma before }
    - Mismatched brackets: `{...]}` → should be `{...}`
 3. Validate with: `python3 -m json.tool workflow-1-search-notes.json`

@@ -14,7 +14,7 @@ import time
 from common import (
     NOTES_DB_ID, NOTION_BASE_URL, get_headers,
     build_title_filter, build_project_filter, build_archived_filter, combine_filters,
-    output_success, output_error, extract_title, extract_block_text
+    output_success, output_error, extract_title, extract_block_text, sibling_script
 )
 
 def get_project_name_from_id(project_id):
@@ -53,22 +53,11 @@ def find_note_by_name(note_name, project_name=None):
     # If project name provided, resolve it first
     project_id = None
     if project_name:
-        import os
-        # Try to locate the search_projects.py script
-        script_path = "~/.claude/scripts/notion/search_projects.py"
-        if not os.path.exists(script_path):
-            fallback_paths = [
-                "/root/notion/scripts/skills/search_projects.py",
-                os.path.expanduser("~/.claude/scripts/notion/search_projects.py")
-            ]
-            for path in fallback_paths:
-                if os.path.exists(path):
-                    script_path = path
-                    break
+        script_path = sibling_script("search_projects.py")
 
         try:
             result = subprocess.run(
-                ["python3", script_path,
+                [sys.executable, str(script_path),
                  "--name", project_name, "--limit", "1"],
                 capture_output=True,
                 text=True,

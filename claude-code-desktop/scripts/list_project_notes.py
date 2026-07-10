@@ -14,7 +14,7 @@ import time
 from common import (
     NOTES_DB_ID, NOTION_BASE_URL, get_headers,
     build_project_filter, build_archived_filter, combine_filters,
-    output_success, output_error, extract_title
+    output_success, output_error, extract_title, sibling_script
 )
 
 def get_project_id_from_name(project_name):
@@ -30,25 +30,12 @@ def get_project_id_from_name(project_name):
     Raises:
         SystemExit: If project not found or multiple matches
     """
-    import os
-
-    # Try to locate the search_projects.py script
-    script_path = "~/.claude/scripts/notion/search_projects.py"
-    if not os.path.exists(script_path):
-        # Fallback to other possible locations
-        fallback_paths = [
-            "/root/notion/scripts/skills/search_projects.py",
-            os.path.expanduser("~/.claude/scripts/notion/search_projects.py")
-        ]
-        for path in fallback_paths:
-            if os.path.exists(path):
-                script_path = path
-                break
+    script_path = sibling_script("search_projects.py")
 
     try:
         # First try: exact match (case-insensitive)
         result = subprocess.run(
-            ["python3", script_path,
+            [sys.executable, str(script_path),
              "--name", project_name, "--exact", "--limit", "10"],
             capture_output=True,
             text=True,
@@ -58,7 +45,7 @@ def get_project_id_from_name(project_name):
         # If exact match fails, try partial match
         if result.returncode != 0:
             result = subprocess.run(
-                ["python3", script_path,
+                [sys.executable, str(script_path),
                  "--name", project_name, "--limit", "10"],
                 capture_output=True,
                 text=True,
